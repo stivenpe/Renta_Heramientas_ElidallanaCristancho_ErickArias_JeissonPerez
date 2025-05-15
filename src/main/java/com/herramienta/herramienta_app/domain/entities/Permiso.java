@@ -9,29 +9,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "permisos")
 public class Permiso {
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idPermiso;
-
-    public Long getIdPermiso() {
-        return idPermiso;
-    }
-     public void setIdPermiso(Long idPermiso) {
-         this.idPermiso = idPermiso;
-     }
-     public String getNombre() {
-         return nombre;
-     }
-     public void setNombre(String nombre) {
-         this.nombre = nombre;
-     }
-     public String getDescripcion() {
-         return descripcion;
-     }
-     public void setDescripcion(String descripcion) {
-         this.descripcion = descripcion;
-     }
-    private String nombre;
+    private Long id;
+    
+    private String nombre; 
     private String descripcion;
-
+    
 }
