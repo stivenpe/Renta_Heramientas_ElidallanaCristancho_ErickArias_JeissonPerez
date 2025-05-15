@@ -1,6 +1,7 @@
 package com.herramienta.herramienta_app.application.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,63 +14,37 @@ import com.herramienta.herramienta_app.infrastructure.repositories.CategoriaRepo
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.ProveedorRepository;
 
+import lombok.RequiredArgsConstructor;
+
+
 @Service
+@RequiredArgsConstructor
 public class HerramientaService {
-
-    @Autowired
-    private HerramientaRepository herramientaRepository;
-
-    @Autowired
-    private CategoriaRepository categoriaRepository;
-
-    @Autowired
-    private ProveedorRepository proveedorRepository;
-
-    public Herramienta crearHerramienta(HerramientaDto dto) {
-        Categoria categoria = categoriaRepository.findById(dto.getIdCategoria())
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-        Proveedor proveedor = proveedorRepository.findById(dto.getIdProveedor())
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
-
+    private final HerramientaRepository herramientaRepository;
+    private final ProveedorRepository proveedorRepository;
+    private final CategoriaRepository categoriaRepository;
+    
+    public List<HerramientaDTO> buscarHerramientasDisponibles() {
+        return herramientaRepository.findDisponibles().stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
+    }
+    
+    public HerramientaDTO crearHerramienta(HerramientaDTO herramientaDTO, Long proveedorId) {
+        Proveedor proveedor = proveedorRepository.findById(proveedorId)
+            .orElseThrow(() -> new UsuarioNoEncontradoException("Proveedor no encontrado"));
+            
+        Categoria categoria = categoriaRepository.findByNombre(herramientaDTO.getCategoria())
+            .orElseThrow(() -> new IllegalArgumentException("Categoría no válida"));
+            
         Herramienta herramienta = new Herramienta();
-        herramienta.setNombre(dto.getNombre());
-        herramienta.setDescripcion(dto.getDescripcion());
-        herramienta.setCostoDia(dto.getCostoDia());
-        herramienta.setDeposito(dto.getDeposito());
-        herramienta.setCategoria(categoria);
+        // Mapear DTO a entidad
         herramienta.setProveedor(proveedor);
-        herramienta.setDisponible(true);
-
-        return herramientaRepository.save(herramienta);
-    }
-
-    public List<Herramienta> obtenerTodas() {
-        return herramientaRepository.findAll();
-    }
-
-    public Herramienta obtenerPorId(Long id) {
-        return herramientaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Herramienta no encontrada"));
-    }
-
-    public Herramienta actualizarHerramienta(Long id, HerramientaDto dto) {
-        Herramienta herramienta = obtenerPorId(id);
-        Categoria categoria = categoriaRepository.findById(dto.getIdCategoria())
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-        Proveedor proveedor = proveedorRepository.findById(dto.getIdProveedor())
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
-
-        herramienta.setNombre(dto.getNombre());
-        herramienta.setDescripcion(dto.getDescripcion());
-        herramienta.setCostoDia(dto.getCostoDia());
-        herramienta.setDeposito(dto.getDeposito());
         herramienta.setCategoria(categoria);
-        herramienta.setProveedor(proveedor);
-
-        return herramientaRepository.save(herramienta);
+        
+        Herramienta saved = herramientaRepository.save(herramienta);
+        return mapToDTO(saved);
     }
-
-    public void eliminarHerramienta(Long id) {
-        herramientaRepository.deleteById(id);
-    }
+    
+    // Otros métodos de servicio
 }

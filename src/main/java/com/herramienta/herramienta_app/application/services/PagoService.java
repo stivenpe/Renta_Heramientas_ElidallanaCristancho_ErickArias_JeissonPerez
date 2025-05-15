@@ -13,49 +13,52 @@ import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepositor
 
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PagoService {
-
     private final PagoRepository pagoRepository;
-
-    public PagoService(PagoRepository pagoRepository) {
-        this.pagoRepository = pagoRepository;
-    }
-
-    // Inicializa Stripe al iniciar la aplicación
-    @PostConstruct
-    public void initStripe() {
-        Stripe.apiKey = "sk_test_..."; // ⚠️ Usa una variable de entorno en producción
-    }
-
-    public void procesarPago(Pago pago) {
-        if (pago == null || pago.getMonto() == null) {
-            throw new IllegalArgumentException("Pago o monto no pueden ser nulos.");
+    private final ReservaRepository reservaRepository;
+    private final FacturaService facturaService;
+    private final NotificacionService notificacionService;
+    
+    @Transactional
+    public PagoDTO procesarPago(PagoDTO pagoDTO) {
+        Reserva reserva = reservaRepository.findById(pagoDTO.getReservaId())
+            .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+            
+        if (!"PENDIENTE".equals(reserva.getEstado())) {
+            throw new PagoFallidoException("La reserva no está pendiente de pago");
         }
-
-        // Convertimos el monto a centavos (ej. 20.50 => 2050)
-        long montoCentavos = pago.getMonto().multiply(BigDecimal.valueOf(100)).longValue();
-
-        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(montoCentavos)
-                .setCurrency("usd")
-                .build();
-
-        try {
-            PaymentIntent paymentIntent = PaymentIntent.create(params);
-
-            // Puedes guardar más detalles del PaymentIntent si lo deseas
-            pago.setEstado("Completado");
-            pago.setFecha(java.time.LocalDateTime.now());
-
-        } catch (Exception e) {
-            pago.setEstado("Fallido");
-            pago.setFecha(java.time.LocalDateTime.now());
-            throw new RuntimeException("Error al procesar el pago: " + e.getMessage(), e);
-        }
-
-        // Guardamos el resultado del pago
-        pagoRepository.save(pago);
+        
+        Pago pago = new Pago();
+        // Mapear DTO a entidad
+        pago.setEstado("COMPLETADO");
+        pago.setFechaPago(LocalDateTime.now());
+        
+        Pago saved = pagoRepository.save(pago);
+        
+        // Actualizar estado de la reserva
+        reserva.setEstado("APROBADA");
+        reservaRepository.save(reserva);
+        
+        // Generar factura
+        facturaService.generarFactura(reserva);
+        
+        // Notificar al cliente y proveedor
+        notificacionService.crearNotificacion(
+            reserva.getCliente().getId(),
+            "Pago completado",
+            "Tu pago por la reserva #" + reserva.getId() + " ha sido procesado"
+        );
+        
+        notificacionService.crearNotificacion(
+            reserva.getProveedor().getId(),
+            "Pago recibido",
+            "Has recibido un pago por la reserva #" + reserva.getId()
+        );
+        
+        return mapToDTO(saved);
     }
 }
