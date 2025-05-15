@@ -8,21 +8,34 @@ import com.herramienta.herramienta_app.domain.entities.Usuario;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
 
 public class AuthService {
-    @Autowired
-    private UsuarioRepository usuarioRepo;
-
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    public String login(String email, String password) {
-        Usuario usuario = usuarioRepo.findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("No encontrado"));
-
-        if (!password.equals(usuario.getPassword())) {
-            throw new BadCredentialsException("Contraseña incorrecta");
+    @Service
+@RequiredArgsConstructor
+public class AuthService {
+    private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
+    
+    public LoginResponseDTO login(LoginRequestDTO request) {
+        Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
+            
+        if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
+            throw new UsuarioNoEncontradoException("Credenciales inválidas");
         }
-
-        return jwtUtils.generateToken(usuario);
+        
+        if (!usuario.isActivo()) {
+            throw new UsuarioNoEncontradoException("Usuario desactivado");
+        }
+        
+        String token = jwtUtils.generateToken(usuario);
+        UsuarioDTO usuarioDTO = mapToDTO(usuario);
+        
+        return new LoginResponseDTO(token, usuarioDTO);
+    }
+    
+    private UsuarioDTO mapToDTO(Usuario usuario) {
+        // Mapear usuario a DTO
     }
 }
-
+}
