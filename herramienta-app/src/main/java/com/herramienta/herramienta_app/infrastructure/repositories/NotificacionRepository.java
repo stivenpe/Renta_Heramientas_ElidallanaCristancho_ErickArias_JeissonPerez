@@ -2,12 +2,12 @@ package com.herramienta.herramienta_app.infrastructure.repositories;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import com.herramienta.herramienta_app.domain.entities.Notificacion;
 
-public interface NotificacionRepository {
-     void save(Notificacion notificacion);
-    List<Notificacion> findByUsuario(Long idUsuario);
-    void update(Notificacion notificacion);
-    void delete(Long idNotificacion);
-
+@Repository
+public interface NotificacionRepository extends JpaRepository<Notificacion, Long> {
+    List<Notificacion> findByUsuario_Id(Long idUsuario); // Asumiendo que Notificacion tiene un campo 'usuario' de tipo Usuario
 }
