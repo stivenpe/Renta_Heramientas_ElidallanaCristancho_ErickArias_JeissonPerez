@@ -22,7 +22,6 @@ public class Cliente {
     private String empresa;
     private String rfc;
 
-    // Getters y Setters
 
     public Long getIdCliente() {
         return idCliente;

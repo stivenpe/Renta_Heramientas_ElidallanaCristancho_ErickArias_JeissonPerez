@@ -1,8 +1,7 @@
-package com.herramienta.herramienta_app.security.filters;
+package com.herramienta.herramienta_app.security;
 
 import com.herramienta.herramienta_app.domain.entities.Usuario;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
-import com.herramienta.herramienta_app.security.utils.JwtUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
