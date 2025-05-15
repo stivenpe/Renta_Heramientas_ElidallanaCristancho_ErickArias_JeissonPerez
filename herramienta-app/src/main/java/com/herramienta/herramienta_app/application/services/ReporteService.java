@@ -1,7 +1,11 @@
 package com.herramienta.herramienta_app.application.services;
 
-import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
+import org.springframework.stereotype.Service;
 
+import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
+import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
+
+@Service
 public class ReporteService {
      private ReservaRepository reservaRepository;
     private PagoRepository pagoRepository;
