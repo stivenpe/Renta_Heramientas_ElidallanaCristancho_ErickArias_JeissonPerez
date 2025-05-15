@@ -11,58 +11,42 @@ import com.herramienta.herramienta_app.infrastructure.repositories.ClienteReposi
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ReservaService {
-
-    @Autowired
-    private ReservaRepository reservaRepository;
-
-    @Autowired
-    private HerramientaRepository herramientaRepository;
-
-    @Autowired
-    private ClienteRepository clienteRepository;
-
-    public Reserva crearReserva(ReservaDto dto) {
-        Herramienta herramienta = herramientaRepository.findById(dto.getIdHerramienta())
-                .orElseThrow(() -> new RuntimeException("Herramienta no encontrada"));
-
-        if (!herramienta.getDisponible()) {
-            throw new RuntimeException("La herramienta no está disponible");
-
+    private final ReservaRepository reservaRepository;
+    private final HerramientaRepository herramientaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final NotificacionService notificacionService;
+    
+    public ReservaDTO crearReserva(ReservaDTO reservaDTO) {
+        Herramienta herramienta = herramientaRepository.findById(reservaDTO.getHerramientaId())
+            .orElseThrow(() -> new HerramientaNoDisponibleException("Herramienta no encontrada"));
+            
+        if (herramienta.getCantidadDisponible() <= 0) {
+            throw new HerramientaNoDisponibleException("Herramienta no disponible");
         }
-
-        Cliente cliente = clienteRepository.findById(dto.getIdCliente())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
+        
+        Usuario cliente = usuarioRepository.findById(reservaDTO.getClienteId())
+            .orElseThrow(() -> new UsuarioNoEncontradoException("Cliente no encontrado"));
+            
         Reserva reserva = new Reserva();
-        reserva.setHerramienta(herramienta);
-        reserva.setCliente(cliente);
-        reserva.setFechaInicio(dto.getFechaInicio());
-        reserva.setFechaFin(dto.getFechaFin());
-        reserva.setTotal(dto.getTotal());
-        reserva.setEstado("Confirmada");
-
-        herramienta.setDisponible(false);
-        herramientaRepository.save(herramienta);
-
-        return reservaRepository.save(reserva);
+        // Mapear DTO a entidad
+        reserva.setEstado("PENDIENTE");
+        
+        Reserva saved = reservaRepository.save(reserva);
+        
+        // Notificar al proveedor
+        notificacionService.crearNotificacion(
+            herramienta.getProveedor().getId(),
+            "Nueva solicitud de reserva",
+            "Tienes una nueva solicitud para " + herramienta.getNombre()
+        );
+        
+        return mapToDTO(saved);
     }
-
-    public void cancelarReserva(Long idReserva) {
-        Reserva reserva = reservaRepository.findById(idReserva)
-        .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
-
-                
-
-        reserva.setEstado("Cancelada");
-        reservaRepository.save(reserva);
-
-        Herramienta herramienta = reserva.getHerramienta();
-        herramienta.setDisponible(true);
-        herramientaRepository.save(herramienta);
-    }
-
-    // Métodos para obtener historial de reservas
+    
+    // Otros métodos de servicio
 }
-

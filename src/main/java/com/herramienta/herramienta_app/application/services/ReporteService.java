@@ -6,25 +6,30 @@ import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepositor
 import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ReporteService {
-     private ReservaRepository reservaRepository;
-    private PagoRepository pagoRepository;
-
-    public ReporteService(ReservaRepository reservaRepository, PagoRepository pagoRepository) {
-        this.reservaRepository = reservaRepository;
-        this.pagoRepository = pagoRepository;
+    private final ReservaRepository reservaRepository;
+    private final HerramientaRepository herramientaRepository;
+    private final PagoRepository pagoRepository;
+    
+    public ReporteDTO generarReporteIngresos(LocalDate inicio, LocalDate fin) {
+        List<Pago> pagos = pagoRepository.findByFechaPagoBetween(
+            inicio.atStartOfDay(),
+            fin.atTime(23, 59, 59)
+        );
+        
+        double total = pagos.stream()
+            .mapToDouble(Pago::getMonto)
+            .sum();
+            
+        ReporteDTO reporte = new ReporteDTO();
+        reporte.setTipo("INGRESOS");
+        reporte.setFechaInicio(inicio);
+        reporte.setFechaFin(fin);
+        reporte.setDatos(Map.of("total", total, "pagos", pagos.size()));
+        
+        return reporte;
     }
-
-    public void generarReporteDeVentas() {
-      
-    }
-
-    public void generarReporteDeAlquileres() {
-        // Lógica para generar reporte de alquileres
-    }
-
-    public void generarEstadisticasDeUso() {
-        // Estadísticas de uso de herramientas y clientes frecuentes
-    }
-
+    
+    // Otros métodos de reporte
 }
