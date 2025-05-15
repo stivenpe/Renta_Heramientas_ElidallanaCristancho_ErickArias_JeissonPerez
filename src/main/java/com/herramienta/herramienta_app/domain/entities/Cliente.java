@@ -14,8 +14,35 @@ public class Cliente extends Usuario {
     private String rfc;
     private String razonSocial;
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "cliente")
     private List<Reserva> reservas;
+=======
+
+    public Long getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
+    }
+>>>>>>> feature/correction-errors
 
     public String getRfc() {
         return rfc;

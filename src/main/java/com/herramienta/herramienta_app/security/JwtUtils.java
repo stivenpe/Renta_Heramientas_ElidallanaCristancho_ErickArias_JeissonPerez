@@ -6,6 +6,7 @@ import com.herramienta.herramienta_app.domain.entities.Rol;
 import com.herramienta.herramienta_app.domain.entities.Usuario;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JwtUtils { private final String SECRET_KEY = "secreto123";
 
