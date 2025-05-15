@@ -2,6 +2,7 @@ package com.herramienta.herramienta_app.domain.entities;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "herramientas")
@@ -20,17 +21,27 @@ public class Herramienta {
     private BigDecimal deposito;
     private Boolean disponible;
 
-    // Agregamos la relación con Proveedor
+    // Relación con Proveedor
     @ManyToOne
     @JoinColumn(name = "id_proveedor")
     private Proveedor proveedor;
 
-    // Agregamos la relación con Categoria
+    // Relación con Categoria
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
-    // ======== Getters y Setters ========
+    // NUEVOS CAMPOS PARA GESTIÓN DE PRÉSTAMOS 
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
+    @Column(name = "fecha_limite_devolucion")
+    private LocalDateTime fechaLimiteDevolucion;
+
+    private Boolean devuelta;
+
 
     public Long getId() {
         return id;
@@ -94,5 +105,29 @@ public class Herramienta {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public LocalDateTime getFechaLimiteDevolucion() {
+        return fechaLimiteDevolucion;
+    }
+
+    public void setFechaLimiteDevolucion(LocalDateTime fechaLimiteDevolucion) {
+        this.fechaLimiteDevolucion = fechaLimiteDevolucion;
+    }
+
+    public Boolean getDevuelta() {
+        return devuelta;
+    }
+
+    public void setDevuelta(Boolean devuelta) {
+        this.devuelta = devuelta;
     }
 }

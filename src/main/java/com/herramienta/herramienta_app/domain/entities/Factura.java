@@ -1,6 +1,5 @@
 package com.herramienta.herramienta_app.domain.entities;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -24,13 +23,9 @@ public class Factura {
     private Pago pago;
 
     private String rfcEmisor;
-
     private String rfcReceptor;
-
     private BigDecimal subtotal;
-
     private BigDecimal iva;
-
     private BigDecimal total;
 
     @Lob
@@ -41,7 +36,6 @@ public class Factura {
 
     private LocalDateTime fecha;
 
-    // Getters y Setters
     public Long getIdFactura() {
         return idFactura;
     }
@@ -120,5 +114,15 @@ public class Factura {
 
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
+    }
+
+    public void procesarFactura(Pago pago) {
+        this.pago = pago;
+        this.fecha = LocalDateTime.now();
+        this.subtotal = pago.getMonto();
+        this.iva = subtotal.multiply(new BigDecimal("0.16"));
+        this.total = subtotal.add(iva);
+
+        System.out.println("Factura procesada para el pago con ID: " + pago.getIdPago());
     }
 }

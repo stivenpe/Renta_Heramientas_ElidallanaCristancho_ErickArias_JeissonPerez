@@ -1,5 +1,9 @@
 package com.herramienta.herramienta_app.application.services;
 
+import com.stripe.Stripe;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
+
 import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
