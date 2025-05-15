@@ -1,5 +1,7 @@
 package com.herramienta.herramienta_app.application.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,6 @@ public class HerramientaService {
     public Herramienta crearHerramienta(HerramientaDto dto) {
         Categoria categoria = categoriaRepository.findById(dto.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-
         Proveedor proveedor = proveedorRepository.findById(dto.getIdProveedor())
                 .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
 
@@ -42,5 +43,33 @@ public class HerramientaService {
         return herramientaRepository.save(herramienta);
     }
 
-    // Otros métodos CRUD si los necesitas...
+    public List<Herramienta> obtenerTodas() {
+        return herramientaRepository.findAll();
+    }
+
+    public Herramienta obtenerPorId(Long id) {
+        return herramientaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Herramienta no encontrada"));
+    }
+
+    public Herramienta actualizarHerramienta(Long id, HerramientaDto dto) {
+        Herramienta herramienta = obtenerPorId(id);
+        Categoria categoria = categoriaRepository.findById(dto.getIdCategoria())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+        Proveedor proveedor = proveedorRepository.findById(dto.getIdProveedor())
+                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+
+        herramienta.setNombre(dto.getNombre());
+        herramienta.setDescripcion(dto.getDescripcion());
+        herramienta.setCostoDia(dto.getCostoDia());
+        herramienta.setDeposito(dto.getDeposito());
+        herramienta.setCategoria(categoria);
+        herramienta.setProveedor(proveedor);
+
+        return herramientaRepository.save(herramienta);
+    }
+
+    public void eliminarHerramienta(Long id) {
+        herramientaRepository.deleteById(id);
+    }
 }

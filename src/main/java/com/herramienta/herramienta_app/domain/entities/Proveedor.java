@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "Proveedores")
 public class Proveedor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProveedor;
@@ -22,6 +23,36 @@ public class Proveedor {
     private String rfc;
     private String razonSocial;
 
-    // Getters y Setters
-}
 
+    public Long getIdProveedor() {
+        return idProveedor;
+    }
+
+    public void setIdProveedor(Long idProveedor) {
+        this.idProveedor = idProveedor;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getRfc() {
+        return rfc;
+    }
+
+    public void setRfc(String rfc) {
+        this.rfc = rfc;
+    }
+
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+}

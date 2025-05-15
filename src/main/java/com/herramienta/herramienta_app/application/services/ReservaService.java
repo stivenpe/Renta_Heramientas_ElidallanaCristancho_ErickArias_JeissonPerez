@@ -28,7 +28,8 @@ public class ReservaService {
                 .orElseThrow(() -> new RuntimeException("Herramienta no encontrada"));
 
         if (!herramienta.getDisponible()) {
-            throw new HerramientaNoDisponibleException("La herramienta no está disponible");
+            throw new RuntimeException("La herramienta no está disponible");
+
         }
 
         Cliente cliente = clienteRepository.findById(dto.getIdCliente())
@@ -50,7 +51,9 @@ public class ReservaService {
 
     public void cancelarReserva(Long idReserva) {
         Reserva reserva = reservaRepository.findById(idReserva)
-                .orElseThrow(() -> new ReservaNoEncontradaException("Reserva no encontrada"));
+        .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+                
 
         reserva.setEstado("Cancelada");
         reservaRepository.save(reserva);

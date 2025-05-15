@@ -8,10 +8,10 @@
 		<version>3.3.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.uissurvey</groupId>
-	<artifactId>uissurvey-app</artifactId>
+	<groupId>com.herramienta</groupId>
+	<artifactId>herramienta-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>uissurvey-app</name>
+	<name>herramienta-app</name>
 	<packaging>war</packaging>
 	<description>Demo project for Spring Boot</description>
 	<url/>
