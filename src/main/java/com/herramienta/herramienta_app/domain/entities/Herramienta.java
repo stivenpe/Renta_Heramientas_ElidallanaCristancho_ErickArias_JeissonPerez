@@ -1,47 +1,44 @@
 package com.herramienta.herramienta_app.domain.entities;
 
-import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "herramientas")
 public class Herramienta {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nombre;
     private String descripcion;
+    private String modelo;
+    private String marca;
+    private double costoPorDia;
+    private int cantidadDisponible;
+    private boolean activa = true;
 
-    @Column(name = "costo_dia")
-    private BigDecimal costoDia;
-
-    private BigDecimal deposito;
-    private Boolean disponible;
-
-    // Relación con Proveedor
     @ManyToOne
-    @JoinColumn(name = "id_proveedor")
-    private Proveedor proveedor;
-
-    // Relación con Categoria
-    @ManyToOne
-    @JoinColumn(name = "id_categoria")
+    @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    // NUEVOS CAMPOS PARA GESTIÓN DE PRÉSTAMOS 
-
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+    @JoinColumn(name = "proveedor_id")
+    private Proveedor proveedor;
 
-    @Column(name = "fecha_limite_devolucion")
-    private LocalDateTime fechaLimiteDevolucion;
+    @OneToMany(mappedBy = "herramienta")
+    private List<Reserva> reservas;
 
-    private Boolean devuelta;
-
+    @OneToMany(mappedBy = "herramienta")
+    private List<Dano> danos;
 
     public Long getId() {
         return id;
@@ -67,36 +64,44 @@ public class Herramienta {
         this.descripcion = descripcion;
     }
 
-    public BigDecimal getCostoDia() {
-        return costoDia;
+    public String getModelo() {
+        return modelo;
     }
 
-    public void setCostoDia(BigDecimal costoDia) {
-        this.costoDia = costoDia;
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
 
-    public BigDecimal getDeposito() {
-        return deposito;
+    public String getMarca() {
+        return marca;
     }
 
-    public void setDeposito(BigDecimal deposito) {
-        this.deposito = deposito;
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
 
-    public Boolean getDisponible() {
-        return disponible;
+    public double getCostoPorDia() {
+        return costoPorDia;
     }
 
-    public void setDisponible(Boolean disponible) {
-        this.disponible = disponible;
+    public void setCostoPorDia(double costoPorDia) {
+        this.costoPorDia = costoPorDia;
     }
 
-    public Proveedor getProveedor() {
-        return proveedor;
+    public int getCantidadDisponible() {
+        return cantidadDisponible;
     }
 
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
+    public void setCantidadDisponible(int cantidadDisponible) {
+        this.cantidadDisponible = cantidadDisponible;
+    }
+
+    public boolean isActiva() {
+        return activa;
+    }
+
+    public void setActiva(boolean activa) {
+        this.activa = activa;
     }
 
     public Categoria getCategoria() {
@@ -107,27 +112,27 @@ public class Herramienta {
         this.categoria = categoria;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Proveedor getProveedor() {
+        return proveedor;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
     }
 
-    public LocalDateTime getFechaLimiteDevolucion() {
-        return fechaLimiteDevolucion;
+    public List<Reserva> getReservas() {
+        return reservas;
     }
 
-    public void setFechaLimiteDevolucion(LocalDateTime fechaLimiteDevolucion) {
-        this.fechaLimiteDevolucion = fechaLimiteDevolucion;
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
     }
 
-    public Boolean getDevuelta() {
-        return devuelta;
+    public List<Dano> getDanos() {
+        return danos;
     }
 
-    public void setDevuelta(Boolean devuelta) {
-        this.devuelta = devuelta;
+    public void setDanos(List<Dano> danos) {
+        this.danos = danos;
     }
 }

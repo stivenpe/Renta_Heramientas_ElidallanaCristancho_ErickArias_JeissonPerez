@@ -1,55 +1,58 @@
 package com.herramienta.herramienta_app.domain.entities;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "facturas")
 public class Factura {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idFactura;
+    private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "pago_id", nullable = false)
-    private Pago pago;
-
+    private String folio;
+    private LocalDate fechaEmision;
     private String rfcEmisor;
     private String rfcReceptor;
-    private BigDecimal subtotal;
-    private BigDecimal iva;
-    private BigDecimal total;
-
-    @Lob
+    private double subtotal;
+    private double iva;
+    private double total;
     private String xml;
+    private String pdf;
 
-    @Lob
-    private byte[] pdf;
+    @OneToOne
+    @JoinColumn(name = "reserva_id")
+    private Reserva reserva;
 
-    private LocalDateTime fecha;
-
-    public Long getIdFactura() {
-        return idFactura;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdFactura(Long idFactura) {
-        this.idFactura = idFactura;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Pago getPago() {
-        return pago;
+    public String getFolio() {
+        return folio;
     }
 
-    public void setPago(Pago pago) {
-        this.pago = pago;
+    public void setFolio(String folio) {
+        this.folio = folio;
+    }
+
+    public LocalDate getFechaEmision() {
+        return fechaEmision;
+    }
+
+    public void setFechaEmision(LocalDate fechaEmision) {
+        this.fechaEmision = fechaEmision;
     }
 
     public String getRfcEmisor() {
@@ -68,27 +71,27 @@ public class Factura {
         this.rfcReceptor = rfcReceptor;
     }
 
-    public BigDecimal getSubtotal() {
+    public double getSubtotal() {
         return subtotal;
     }
 
-    public void setSubtotal(BigDecimal subtotal) {
+    public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
     }
 
-    public BigDecimal getIva() {
+    public double getIva() {
         return iva;
     }
 
-    public void setIva(BigDecimal iva) {
+    public void setIva(double iva) {
         this.iva = iva;
     }
 
-    public BigDecimal getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
@@ -100,29 +103,19 @@ public class Factura {
         this.xml = xml;
     }
 
-    public byte[] getPdf() {
+    public String getPdf() {
         return pdf;
     }
 
-    public void setPdf(byte[] pdf) {
+    public void setPdf(String pdf) {
         this.pdf = pdf;
     }
 
-    public LocalDateTime getFecha() {
-        return fecha;
+    public Reserva getReserva() {
+        return reserva;
     }
 
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
-
-    public void procesarFactura(Pago pago) {
-        this.pago = pago;
-        this.fecha = LocalDateTime.now();
-        this.subtotal = pago.getMonto();
-        this.iva = subtotal.multiply(new BigDecimal("0.16"));
-        this.total = subtotal.add(iva);
-
-        System.out.println("Factura procesada para el pago con ID: " + pago.getIdPago());
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
     }
 }
