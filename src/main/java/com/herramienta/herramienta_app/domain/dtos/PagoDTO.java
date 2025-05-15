@@ -1,6 +1,6 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-public class PagoDTO {
+public class PagoDto {
       private Long id;
     private double monto;
     private String metodoPago;

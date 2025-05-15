@@ -1,6 +1,6 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-public class LoginRequestDTO {
+public class LoginRequestDto {
       private String email;
     private String password;
     public String getEmail() {

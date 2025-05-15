@@ -2,7 +2,7 @@ package com.herramienta.herramienta_app.domain.dtos;
 
 import java.time.LocalDate;
 
-public class ReporteDTO {
+public class ReporteDto {
     private String tipo;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;

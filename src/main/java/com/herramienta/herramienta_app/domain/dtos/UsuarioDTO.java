@@ -1,13 +1,13 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-public class UsuarioDTO {
+public class UsuarioDto {
      private Long id;
     private String nombre;
     private String email;
     private String telefono;
     private String direccion;
     private String rol;
-    
+
     // Getters y setters
     public Long getId() {
         return id;
