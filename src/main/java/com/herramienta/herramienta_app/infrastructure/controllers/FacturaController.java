@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import com.herramienta.herramienta_app.application.services.FacturaService;
-import com.herramienta.herramienta_app.application.dtos.FacturaDto;
+import com.herramienta.herramienta_app.domain.dtos.FacturaDto;
 
 @RestController
 @RequestMapping("/api/facturas")

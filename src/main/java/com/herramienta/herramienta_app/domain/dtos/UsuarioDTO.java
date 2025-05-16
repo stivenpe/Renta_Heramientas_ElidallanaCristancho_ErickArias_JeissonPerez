@@ -1,50 +1,44 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
+import com.herramienta.herramienta_app.domain.dtos.UsuarioDto;
+
 public class UsuarioDto {
-     private Long id;
+    private Long id;
     private String nombre;
     private String email;
     private String telefono;
     private String direccion;
     private String rol;
 
-    // Getters y setters
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
+    // Constructor vacío
+    public UsuarioDto() {}
+
+    // Constructor con parámetros
+    public UsuarioDto(Long id, String nombre, String email, String telefono, String direccion, String rol) {
         this.id = id;
-    }
-    public String getNombre() {
-        return nombre;
-    }
-    public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
         this.email = email;
-    }
-    public String getTelefono() {
-        return telefono;
-    }
-    public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-    public String getDireccion() {
-        return direccion;
-    }
-    public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-    public String getRol() {
-        return rol;
-    }
-    public void setRol(String rol) {
         this.rol = rol;
     }
-    
 
+    // Getters y setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
+
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 }

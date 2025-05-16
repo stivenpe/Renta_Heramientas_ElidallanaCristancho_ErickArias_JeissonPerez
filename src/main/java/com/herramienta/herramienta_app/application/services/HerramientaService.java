@@ -1,21 +1,14 @@
 package com.herramienta.herramienta_app.application.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.herramienta.herramienta_app.domain.dtos.HerramientaDto;
+import com.herramienta.herramienta_app.domain.entities.*;
+import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
+import com.herramienta.herramienta_app.infrastructure.repositories.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.dtos.HerramientaDto;
-import com.herramienta.herramienta_app.domain.entities.Categoria;
-import com.herramienta.herramienta_app.domain.entities.Herramienta;
-import com.herramienta.herramienta_app.domain.entities.Proveedor;
-import com.herramienta.herramienta_app.infrastructure.repositories.CategoriaRepository;
-import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
-import com.herramienta.herramienta_app.infrastructure.repositories.ProveedorRepository;
-
-import lombok.RequiredArgsConstructor;
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +17,13 @@ public class HerramientaService {
     private final ProveedorRepository proveedorRepository;
     private final CategoriaRepository categoriaRepository;
     
-    public List<HerramientaDTO> buscarHerramientasDisponibles() {
-        return herramientaRepository.findDisponibles().stream()
+    public List<HerramientaDto> buscarHerramientasDisponibles() {
+        return herramientaRepository.findByCantidadDisponibleGreaterThan(0).stream()
             .map(this::mapToDTO)
             .collect(Collectors.toList());
     }
     
-    public HerramientaDTO crearHerramienta(HerramientaDTO herramientaDTO, Long proveedorId) {
+    public HerramientaDto crearHerramienta(HerramientaDto herramientaDTO, Long proveedorId) {
         Proveedor proveedor = proveedorRepository.findById(proveedorId)
             .orElseThrow(() -> new UsuarioNoEncontradoException("Proveedor no encontrado"));
             
@@ -38,7 +31,12 @@ public class HerramientaService {
             .orElseThrow(() -> new IllegalArgumentException("Categoría no válida"));
             
         Herramienta herramienta = new Herramienta();
-        // Mapear DTO a entidad
+        herramienta.setNombre(herramientaDTO.getNombre());
+        herramienta.setDescripcion(herramientaDTO.getDescripcion());
+        herramienta.setModelo(herramientaDTO.getModelo());
+        herramienta.setMarca(herramientaDTO.getMarca());
+        herramienta.setCostoPorDia(herramientaDTO.getCostoPorDia());
+        herramienta.setCantidadDisponible(herramientaDTO.getCantidadDisponible());
         herramienta.setProveedor(proveedor);
         herramienta.setCategoria(categoria);
         
@@ -46,5 +44,17 @@ public class HerramientaService {
         return mapToDTO(saved);
     }
     
-    // Otros métodos de servicio
+    private HerramientaDto mapToDTO(Herramienta herramienta) {
+        HerramientaDto dto = new HerramientaDto();
+        dto.setId(herramienta.getId());
+        dto.setNombre(herramienta.getNombre());
+        dto.setDescripcion(herramienta.getDescripcion());
+        dto.setModelo(herramienta.getModelo());
+        dto.setMarca(herramienta.getMarca());
+        dto.setCostoPorDia(herramienta.getCostoPorDia());
+        dto.setCantidadDisponible(herramienta.getCantidadDisponible());
+        dto.setCategoria(herramienta.getCategoria().getNombre());
+        dto.setProveedor(herramienta.getProveedor().getNombreEmpresa());
+        return dto;
+    }
 }

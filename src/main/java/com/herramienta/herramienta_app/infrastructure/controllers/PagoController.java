@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.herramienta.herramienta_app.application.services.PagoService;
+import com.herramienta.herramienta_app.domain.dtos.PagoDto;
 
 import lombok.RequiredArgsConstructor;
 

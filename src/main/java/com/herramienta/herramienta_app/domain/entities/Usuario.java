@@ -98,12 +98,14 @@ public class Usuario {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
+    
 
     public List<Notificacion> getNotificaciones() {
         return notificaciones;
     }
-
+    
     public void setNotificaciones(List<Notificacion> notificaciones) {
         this.notificaciones = notificaciones;
     }
+    
 }

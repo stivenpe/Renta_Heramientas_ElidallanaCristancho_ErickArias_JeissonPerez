@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.herramienta.herramienta_app.application.services.ReporteService;
+import com.herramienta.herramienta_app.domain.dtos.ReporteDto;
 
 import lombok.RequiredArgsConstructor;
 
