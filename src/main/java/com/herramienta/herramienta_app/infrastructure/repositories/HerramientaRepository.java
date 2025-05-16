@@ -11,6 +11,8 @@ public interface HerramientaRepository extends JpaRepository<Herramienta, Long> 
     List<Herramienta> findByProveedorId(Long proveedorId);
     List<Herramienta> findByCategoriaNombre(String categoria);
     List<Herramienta> findByNombreContainingIgnoreCase(String nombre);
+    List<Herramienta> findByCantidadDisponibleGreaterThan(int cantidad);
+
     
     @Query("SELECT h FROM Herramienta h WHERE h.cantidadDisponible > 0 AND h.activa = true")
     List<Herramienta> findDisponibles();

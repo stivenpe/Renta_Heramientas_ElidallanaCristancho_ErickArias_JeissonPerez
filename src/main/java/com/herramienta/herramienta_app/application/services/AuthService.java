@@ -11,7 +11,6 @@ import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoExce
 import com.herramienta.herramienta_app.infrastructure.repositories.RolRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
 import com.herramienta.herramienta_app.infrastructure.security.JwtUtils;
-
 import lombok.RequiredArgsConstructor;
 
 @Service

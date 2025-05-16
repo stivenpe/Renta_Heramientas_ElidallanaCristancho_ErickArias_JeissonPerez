@@ -2,11 +2,17 @@ package com.herramienta.herramienta_app.application.services;
 
 import com.herramienta.herramienta_app.domain.dtos.FacturaDto;
 import com.herramienta.herramienta_app.domain.entities.Factura;
+import com.herramienta.herramienta_app.domain.entities.Reserva;
 import com.herramienta.herramienta_app.infrastructure.repositories.FacturaRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +61,30 @@ public class FacturaService {
         Factura factura = facturaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Factura no encontrada"));
         return factura.getXml().getBytes();
+    }
+
+    public void generarFactura(Reserva reserva) {
+        Factura factura = new Factura();
+        factura.setReserva(reserva);
+        factura.setFolio(UUID.randomUUID().toString());
+        factura.setFechaEmision(LocalDate.now());
+
+        // Asegúrate de que Reserva tenga un método getPrecio() que retorne BigDecimal
+    BigDecimal subtotal = BigDecimal.valueOf(reserva.getCostoTotal()); 
+        BigDecimal iva = subtotal.multiply(BigDecimal.valueOf(0.16));
+        BigDecimal total = subtotal.add(iva);
+
+        factura.setSubtotal(subtotal.doubleValue());
+        factura.setIva(iva.doubleValue());
+        factura.setTotal(total.doubleValue()); // ✅ aquí estaba el detalle
+
+        factura.setRfcEmisor(reserva.getProveedor().getRfc());
+        factura.setRfcReceptor(reserva.getCliente().getRfc());
+
+        factura.setPdf("PDF generado"); // simulación
+        factura.setXml("<xml>Factura</xml>"); // simulación
+
+        facturaRepository.save(factura);
     }
 
     private FacturaDto mapToDTO(Factura factura) {

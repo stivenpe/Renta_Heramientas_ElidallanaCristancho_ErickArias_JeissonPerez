@@ -4,16 +4,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-
-import com.herramienta.herramienta_app.domain.entities.Herramienta;
 import com.herramienta.herramienta_app.domain.entities.Notificacion;
-import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.NotificacionRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
 
 import com.herramienta.herramienta_app.domain.entities.Usuario;
+import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
 
 
 

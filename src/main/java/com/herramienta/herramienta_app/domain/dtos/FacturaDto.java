@@ -13,7 +13,6 @@ public class FacturaDto {
     private double total;
     private Long reservaId;
 
-    // Getters y setters
     public Long getId() {
         return id;
     }
