@@ -3,7 +3,7 @@ package com.herramienta.herramienta_app.domain.dtos;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class ReservaDto {
+public class ReservaDTO {
     private Long id;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;

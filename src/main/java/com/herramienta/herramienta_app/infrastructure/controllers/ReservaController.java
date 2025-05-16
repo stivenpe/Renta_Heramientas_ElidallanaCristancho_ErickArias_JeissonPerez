@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.herramienta.herramienta_app.application.services.ReservaService;
-import com.herramienta.herramienta_app.domain.dtos.ReservaDto;
+import com.herramienta.herramienta_app.domain.dtos.ReservaDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,15 +25,15 @@ public class ReservaController {
     
     @PostMapping
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<ReservaDto> crearReserva(@RequestBody ReservaDto reservaDTO) {
-        ReservaDto created = reservaService.crearReserva(reservaDTO);
+    public ResponseEntity<ReservaDTO> crearReserva(@RequestBody ReservaDTO reservaDTO) {
+        ReservaDTO created = reservaService.crearReserva(reservaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
     
     @GetMapping("/proveedor/{proveedorId}")
     @PreAuthorize("hasRole('PROVEEDOR')")
-    public ResponseEntity<List<ReservaDto>> listarReservasPorProveedor(@PathVariable Long proveedorId) {
-        List<ReservaDto> reservas = reservaService.listarPorProveedor(proveedorId);
+    public ResponseEntity<List<ReservaDTO>> listarReservasPorProveedor(@PathVariable Long proveedorId) {
+        List<ReservaDTO> reservas = reservaService.listarPorProveedor(proveedorId);
         return ResponseEntity.ok(reservas);
     }
     

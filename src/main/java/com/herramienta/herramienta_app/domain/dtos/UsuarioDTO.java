@@ -1,8 +1,8 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-import com.herramienta.herramienta_app.domain.dtos.UsuarioDto;
+import com.herramienta.herramienta_app.domain.dtos.UsuarioDTO;
 
-public class UsuarioDto {
+public class UsuarioDTO {
     private Long id;
     private String nombre;
     private String email;
@@ -10,11 +10,9 @@ public class UsuarioDto {
     private String direccion;
     private String rol;
 
-    // Constructor vacío
-    public UsuarioDto() {}
+    public UsuarioDTO() {}
 
-    // Constructor con parámetros
-    public UsuarioDto(Long id, String nombre, String email, String telefono, String direccion, String rol) {
+    public UsuarioDTO(Long id, String nombre, String email, String telefono, String direccion, String rol) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
@@ -23,7 +21,6 @@ public class UsuarioDto {
         this.rol = rol;
     }
 
-    // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

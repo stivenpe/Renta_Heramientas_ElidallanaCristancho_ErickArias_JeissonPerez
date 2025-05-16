@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import lombok.Data;
 
-public class ReporteDto {
+public class ReporteDTO {
     private String tipo;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;

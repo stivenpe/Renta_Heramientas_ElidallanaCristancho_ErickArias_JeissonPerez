@@ -1,6 +1,6 @@
 package com.herramienta.herramienta_app.application.services;
 
-import com.herramienta.herramienta_app.domain.dtos.PagoDto;
+import com.herramienta.herramienta_app.domain.dtos.PagoDTO;
 import com.herramienta.herramienta_app.domain.entities.Pago;
 import com.herramienta.herramienta_app.domain.entities.Reserva;
 import com.herramienta.herramienta_app.domain.exceptions.PagoFallidoException;
@@ -23,7 +23,7 @@ public class PagoService {
     private final NotificacionService notificacionService;
 
     @Transactional
-    public PagoDto procesarPago(PagoDto pagoDto) {
+    public PagoDTO procesarPago(PagoDTO pagoDto) {
         Reserva reserva = reservaRepository.findById(pagoDto.getReservaId())
             .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
 
@@ -60,8 +60,8 @@ public class PagoService {
         return mapToDTO(saved);
     }
 
-    private PagoDto mapToDTO(Pago pago) {
-        PagoDto dto = new PagoDto();
+    private PagoDTO mapToDTO(Pago pago) {
+        PagoDTO dto = new PagoDTO();
         dto.setId(pago.getId());
         dto.setEstado(pago.getEstado());
         dto.setMetodoPago(pago.getMetodoPago());

@@ -1,6 +1,6 @@
 package com.herramienta.herramienta_app.application.services;
 
-import com.herramienta.herramienta_app.domain.dtos.FacturaDto;
+import com.herramienta.herramienta_app.domain.dtos.FacturaDTO;
 import com.herramienta.herramienta_app.domain.entities.Factura;
 import com.herramienta.herramienta_app.domain.entities.Reserva;
 import com.herramienta.herramienta_app.infrastructure.repositories.FacturaRepository;
@@ -20,31 +20,31 @@ public class FacturaService {
 
     private final FacturaRepository facturaRepository;
 
-    public List<FacturaDto> listarTodas() {
+    public List<FacturaDTO> listarTodas() {
         return facturaRepository.findAll().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
-    public FacturaDto obtenerPorId(Long id) {
+    public FacturaDTO obtenerPorId(Long id) {
         Factura factura = facturaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Factura no encontrada"));
         return mapToDTO(factura);
     }
 
-    public FacturaDto obtenerPorReservaId(Long reservaId) {
+    public FacturaDTO obtenerPorReservaId(Long reservaId) {
         Factura factura = facturaRepository.findByReservaId(reservaId)
                 .orElseThrow(() -> new RuntimeException("Factura no encontrada para esta reserva"));
         return mapToDTO(factura);
     }
 
-    public List<FacturaDto> listarPorClienteId(Long clienteId) {
+    public List<FacturaDTO> listarPorClienteId(Long clienteId) {
         return facturaRepository.findByReservaClienteId(clienteId).stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<FacturaDto> listarPorProveedorId(Long proveedorId) {
+    public List<FacturaDTO> listarPorProveedorId(Long proveedorId) {
         return facturaRepository.findByReservaProveedorId(proveedorId).stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
@@ -86,8 +86,8 @@ public class FacturaService {
         facturaRepository.save(factura);
     }
 
-    private FacturaDto mapToDTO(Factura factura) {
-        FacturaDto dto = new FacturaDto();
+    private FacturaDTO mapToDTO(Factura factura) {
+        FacturaDTO dto = new FacturaDTO();
         dto.setId(factura.getId());
         dto.setFolio(factura.getFolio());
         dto.setFechaEmision(factura.getFechaEmision());

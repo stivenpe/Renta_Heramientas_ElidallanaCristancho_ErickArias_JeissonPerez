@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.herramienta.herramienta_app.application.services.AuthService;
-import com.herramienta.herramienta_app.domain.dtos.LoginRequestDto;
-import com.herramienta.herramienta_app.domain.dtos.LoginResponseDto;
+import com.herramienta.herramienta_app.domain.dtos.LoginRequestDTO;
+import com.herramienta.herramienta_app.domain.dtos.LoginResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +18,8 @@ public class AuthController {
     private final AuthService authService;
     
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request) {
-        LoginResponseDto response = authService.login(request);
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 }

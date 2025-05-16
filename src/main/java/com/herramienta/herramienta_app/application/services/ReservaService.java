@@ -2,7 +2,7 @@ package com.herramienta.herramienta_app.application.services;
 
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.dtos.ReservaDto;
+import com.herramienta.herramienta_app.domain.dtos.ReservaDTO;
 import com.herramienta.herramienta_app.domain.entities.Reserva;
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
@@ -21,11 +21,11 @@ public class ReservaService {
     private final UsuarioRepository usuarioRepository;
     private final NotificacionService notificacionService;
 
-    public ReservaDto crearReserva(ReservaDto reservaDto) {
+    public ReservaDTO crearReserva(ReservaDTO reservaDto) {
         return null;
     }
 
-    public List<ReservaDto> listarPorProveedor(Long proveedorId) {
+    public List<ReservaDTO> listarPorProveedor(Long proveedorId) {
         List<Reserva> reservas = reservaRepository.findByProveedorId(proveedorId);
 
         return reservas.stream()
@@ -33,8 +33,8 @@ public class ReservaService {
             .collect(Collectors.toList());
     }
 
-    private ReservaDto mapToDTO(Reserva reserva) {
-        ReservaDto dto = new ReservaDto();
+    private ReservaDTO mapToDTO(Reserva reserva) {
+        ReservaDTO dto = new ReservaDTO();
         dto.setId(reserva.getId());
         dto.setFechaInicio(reserva.getFechaInicio());
         dto.setFechaFin(reserva.getFechaFin());

@@ -1,9 +1,8 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-import lombok.Data;
 
 
-public class HerramientaDto {
+public class HerramientaDTO {
      private Long id;
     private String nombre;
     private String descripcion;

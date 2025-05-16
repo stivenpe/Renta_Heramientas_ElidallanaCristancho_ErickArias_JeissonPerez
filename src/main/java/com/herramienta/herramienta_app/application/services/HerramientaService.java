@@ -1,6 +1,6 @@
 package com.herramienta.herramienta_app.application.services;
 
-import com.herramienta.herramienta_app.domain.dtos.HerramientaDto;
+import com.herramienta.herramienta_app.domain.dtos.HerramientaDTO;
 import com.herramienta.herramienta_app.domain.entities.*;
 import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
 import com.herramienta.herramienta_app.infrastructure.repositories.*;
@@ -17,13 +17,13 @@ public class HerramientaService {
     private final ProveedorRepository proveedorRepository;
     private final CategoriaRepository categoriaRepository;
     
-    public List<HerramientaDto> buscarHerramientasDisponibles() {
+    public List<HerramientaDTO> buscarHerramientasDisponibles() {
         return herramientaRepository.findByCantidadDisponibleGreaterThan(0).stream()
             .map(this::mapToDTO)
             .collect(Collectors.toList());
     }
     
-    public HerramientaDto crearHerramienta(HerramientaDto herramientaDTO, Long proveedorId) {
+    public HerramientaDTO crearHerramienta(HerramientaDTO herramientaDTO, Long proveedorId) {
         Proveedor proveedor = proveedorRepository.findById(proveedorId)
             .orElseThrow(() -> new UsuarioNoEncontradoException("Proveedor no encontrado"));
             
@@ -44,8 +44,8 @@ public class HerramientaService {
         return mapToDTO(saved);
     }
     
-    private HerramientaDto mapToDTO(Herramienta herramienta) {
-        HerramientaDto dto = new HerramientaDto();
+    private HerramientaDTO mapToDTO(Herramienta herramienta) {
+        HerramientaDTO dto = new HerramientaDTO();
         dto.setId(herramienta.getId());
         dto.setNombre(herramienta.getNombre());
         dto.setDescripcion(herramienta.getDescripcion());

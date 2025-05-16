@@ -3,9 +3,9 @@ package com.herramienta.herramienta_app.application.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.dtos.LoginRequestDto;
-import com.herramienta.herramienta_app.domain.dtos.LoginResponseDto;
-import com.herramienta.herramienta_app.domain.dtos.UsuarioDto;
+import com.herramienta.herramienta_app.domain.dtos.LoginRequestDTO;
+import com.herramienta.herramienta_app.domain.dtos.LoginResponseDTO;
+import com.herramienta.herramienta_app.domain.dtos.UsuarioDTO;
 import com.herramienta.herramienta_app.domain.entities.Usuario;
 import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
 import com.herramienta.herramienta_app.infrastructure.repositories.RolRepository;
@@ -21,7 +21,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     
-    public LoginResponseDto login(LoginRequestDto request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
             .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
             
@@ -34,13 +34,13 @@ public class AuthService {
         }
         
         String token = jwtUtils.generateToken(usuario);
-        UsuarioDto usuarioDTO = mapToDTO(usuario);
+        UsuarioDTO usuarioDTO = mapToDTO(usuario);
         
-        return new LoginResponseDto(token, usuarioDTO);
+        return new LoginResponseDTO(token, usuarioDTO);
     }
     
-    private UsuarioDto mapToDTO(Usuario usuario) {
-        UsuarioDto dto = new UsuarioDto();
+    private UsuarioDTO mapToDTO(Usuario usuario) {
+        UsuarioDTO dto = new UsuarioDTO();
         dto.setId(usuario.getId());
         dto.setNombre(usuario.getNombre());
         dto.setEmail(usuario.getEmail());

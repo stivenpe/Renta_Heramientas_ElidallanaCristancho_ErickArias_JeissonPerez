@@ -1,8 +1,7 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-import lombok.Data;
 
-public class PagoDto {
+public class PagoDTO {
     private Long id;
     private double monto;
     private String metodoPago;
