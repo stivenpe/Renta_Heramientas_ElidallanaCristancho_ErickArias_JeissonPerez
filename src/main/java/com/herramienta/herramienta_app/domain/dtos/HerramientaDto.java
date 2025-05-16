@@ -1,63 +1,69 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-import java.math.BigDecimal;
-
 public class HerramientaDto {
-
+     private Long id;
     private String nombre;
     private String descripcion;
-    private BigDecimal costoDia;
-    private BigDecimal deposito;
-    private Long idCategoria;
-    private Long idProveedor;
-
-    // ======= Getters y Setters =======
-
+    private String modelo;
+    private String marca;
+    private double costoPorDia;
+    private int cantidadDisponible;
+    private String categoria;
+    private String proveedor;
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getNombre() {
         return nombre;
     }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
     public String getDescripcion() {
         return descripcion;
     }
-
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-
-    public BigDecimal getCostoDia() {
-        return costoDia;
+    public String getModelo() {
+        return modelo;
     }
-
-    public void setCostoDia(BigDecimal costoDia) {
-        this.costoDia = costoDia;
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
-
-    public BigDecimal getDeposito() {
-        return deposito;
+    public String getMarca() {
+        return marca;
     }
-
-    public void setDeposito(BigDecimal deposito) {
-        this.deposito = deposito;
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
-
-    public Long getIdCategoria() {
-        return idCategoria;
+    public double getCostoPorDia() {
+        return costoPorDia;
     }
-
-    public void setIdCategoria(Long idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setCostoPorDia(double costoPorDia) {
+        this.costoPorDia = costoPorDia;
     }
-
-    public Long getIdProveedor() {
-        return idProveedor;
+    public int getCantidadDisponible() {
+        return cantidadDisponible;
     }
-
-    public void setIdProveedor(Long idProveedor) {
-        this.idProveedor = idProveedor;
+    public void setCantidadDisponible(int cantidadDisponible) {
+        this.cantidadDisponible = cantidadDisponible;
     }
+    public String getCategoria() {
+        return categoria;
+    }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+    public String getProveedor() {
+        return proveedor;
+    }
+    public void setProveedor(String proveedor) {
+        this.proveedor = proveedor;
+    }
+    
+
 }

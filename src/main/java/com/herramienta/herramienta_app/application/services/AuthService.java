@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.herramienta.herramienta_app.domain.entities.Usuario;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
+import com.herramienta.herramienta_app.security.JwtUtils;
 
 public class AuthService {
     @Service

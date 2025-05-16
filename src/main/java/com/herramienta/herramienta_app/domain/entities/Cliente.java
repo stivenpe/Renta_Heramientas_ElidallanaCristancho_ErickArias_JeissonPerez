@@ -1,28 +1,23 @@
 package com.herramienta.herramienta_app.domain.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Clientes")
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCliente;
-
-    @OneToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
-
-    private String empresa;
+@Table(name = "clientes")
+@PrimaryKeyJoinColumn(name = "usuario_id")
+public class Cliente extends Usuario {
     private String rfc;
+    private String razonSocial;
 
-    // Getters y Setters
+<<<<<<< HEAD
+    @OneToMany(mappedBy = "cliente")
+    private List<Reserva> reservas;
+=======
 
     public Long getIdCliente() {
         return idCliente;
@@ -47,6 +42,7 @@ public class Cliente {
     public void setEmpresa(String empresa) {
         this.empresa = empresa;
     }
+>>>>>>> feature/correction-errors
 
     public String getRfc() {
         return rfc;
@@ -54,5 +50,21 @@ public class Cliente {
 
     public void setRfc(String rfc) {
         this.rfc = rfc;
+    }
+
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
     }
 }

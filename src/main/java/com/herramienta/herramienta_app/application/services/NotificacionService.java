@@ -10,9 +10,6 @@ import com.herramienta.herramienta_app.domain.entities.Notificacion;
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.NotificacionRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
-
-import lombok.RequiredArgsConstructor;
-
 import com.herramienta.herramienta_app.infrastructure.repositories.EmailSender;
 import com.herramienta.herramienta_app.domain.entities.Usuario;
 

@@ -1,22 +1,9 @@
-package com.herramienta.herramienta_app.domain.entities;
+package com.herramienta.herramienta_app.domain.dtos;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "facturas")
-public class Factura {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class FacturaDto {
+     private Long id;
     private String folio;
     private LocalDate fechaEmision;
     private String rfcEmisor;
@@ -24,13 +11,9 @@ public class Factura {
     private double subtotal;
     private double iva;
     private double total;
-    private String xml;
-    private String pdf;
+    private Long reservaId;
 
-    @OneToOne
-    @JoinColumn(name = "reserva_id")
-    private Reserva reserva;
-
+    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -95,27 +78,13 @@ public class Factura {
         this.total = total;
     }
 
-    public String getXml() {
-        return xml;
+    public Long getReservaId() {
+        return reservaId;
     }
 
-    public void setXml(String xml) {
-        this.xml = xml;
-    }
-
-    public String getPdf() {
-        return pdf;
-    }
-
-    public void setPdf(String pdf) {
-        this.pdf = pdf;
-    }
-
-    public Reserva getReserva() {
-        return reserva;
-    }
-
-    public void setReserva(Reserva reserva) {
-        this.reserva = reserva;
+    public void setReservaId(Long reservaId) {
+        this.reservaId = reservaId;
     }
 }
+
+

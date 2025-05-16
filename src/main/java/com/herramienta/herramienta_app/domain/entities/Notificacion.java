@@ -1,5 +1,6 @@
 package com.herramienta.herramienta_app.domain.entities;
 
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,43 +8,38 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "notificaciones")
 public class Notificacion {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idNotificacion;
+    private Long id;
+
+    private String titulo;
+    private String mensaje;
+    private boolean leida = false;
+    private LocalDateTime fechaCreacion;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    private String mensaje;
-
-    private LocalDateTime fecha;
-
-    private Boolean leida;
-
-    private String tipo;
-
-    // Getters y Setters
-    public Long getIdNotificacion() {
-        return idNotificacion;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdNotificacion(Long idNotificacion) {
-        this.idNotificacion = idNotificacion;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getMensaje() {
@@ -54,27 +50,27 @@ public class Notificacion {
         this.mensaje = mensaje;
     }
 
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
-
-    public Boolean getLeida() {
+    public boolean isLeida() {
         return leida;
     }
 
-    public void setLeida(Boolean leida) {
+    public void setLeida(boolean leida) {
         this.leida = leida;
     }
 
-    public String getTipo() {
-        return tipo;
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }
