@@ -1,65 +1,62 @@
 package com.herramienta.herramienta_app.domain.entities;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Reservas")
+@Table(name = "reservas")
 public class Reserva {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idReserva;
+    private Long id;
+
+    private LocalDateTime fechaReserva;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private double costoTotal;
+    private String estado; // PENDIENTE, APROBADA, RECHAZADA, COMPLETADA, CANCELADA
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "id_herramienta", nullable = false)
+    @JoinColumn(name = "proveedor_id")
+    private Proveedor proveedor;
+
+    @ManyToOne
+    @JoinColumn(name = "herramienta_id")
     private Herramienta herramienta;
 
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
-    private String estado = "Pendiente";
-    private BigDecimal total;
+    @OneToOne(mappedBy = "reserva")
+    private Pago pago;
 
-    @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
+    @OneToOne(mappedBy = "reserva")
+    private Factura factura;
 
-
-    public Long getIdReserva() {
-        return idReserva;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdReserva(Long idReserva) {
-        this.idReserva = idReserva;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public LocalDateTime getFechaReserva() {
+        return fechaReserva;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Herramienta getHerramienta() {
-        return herramienta;
-    }
-
-    public void setHerramienta(Herramienta herramienta) {
-        this.herramienta = herramienta;
+    public void setFechaReserva(LocalDateTime fechaReserva) {
+        this.fechaReserva = fechaReserva;
     }
 
     public LocalDate getFechaInicio() {
@@ -78,6 +75,14 @@ public class Reserva {
         this.fechaFin = fechaFin;
     }
 
+    public double getCostoTotal() {
+        return costoTotal;
+    }
+
+    public void setCostoTotal(double costoTotal) {
+        this.costoTotal = costoTotal;
+    }
+
     public String getEstado() {
         return estado;
     }
@@ -86,19 +91,43 @@ public class Reserva {
         this.estado = estado;
     }
 
-    public BigDecimal getTotal() {
-        return total;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
+    public Proveedor getProveedor() {
+        return proveedor;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public Herramienta getHerramienta() {
+        return herramienta;
+    }
+
+    public void setHerramienta(Herramienta herramienta) {
+        this.herramienta = herramienta;
+    }
+
+    public Pago getPago() {
+        return pago;
+    }
+
+    public void setPago(Pago pago) {
+        this.pago = pago;
+    }
+
+    public Factura getFactura() {
+        return factura;
+    }
+
+    public void setFactura(Factura factura) {
+        this.factura = factura;
     }
 }

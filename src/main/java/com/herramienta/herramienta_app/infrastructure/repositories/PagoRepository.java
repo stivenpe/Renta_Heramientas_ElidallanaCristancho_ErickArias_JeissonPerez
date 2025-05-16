@@ -1,10 +1,11 @@
 package com.herramienta.herramienta_app.infrastructure.repositories;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import com.herramienta.herramienta_app.domain.entities.Pago;
 
-@Repository
 public interface PagoRepository extends JpaRepository<Pago, Long> {
-    // Puedes agregar métodos personalizados si los necesitas
+    List<Pago> findByFechaPagoBetween(LocalDateTime inicio, LocalDateTime fin);
 }
+

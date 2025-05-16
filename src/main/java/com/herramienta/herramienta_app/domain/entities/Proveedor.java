@@ -1,44 +1,25 @@
 package com.herramienta.herramienta_app.domain.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Proveedores")
-public class Proveedor {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProveedor;
-
-    @OneToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
-
+@Table(name = "proveedores")
+@PrimaryKeyJoinColumn(name = "usuario_id")
+public class Proveedor extends Usuario {
     private String rfc;
     private String razonSocial;
+    private String nombreEmpresa;
 
+    @OneToMany(mappedBy = "proveedor")
+    private List<Herramienta> herramientas;
 
-    public Long getIdProveedor() {
-        return idProveedor;
-    }
-
-    public void setIdProveedor(Long idProveedor) {
-        this.idProveedor = idProveedor;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    @OneToMany(mappedBy = "proveedor")
+    private List<Reserva> reservas;
 
     public String getRfc() {
         return rfc;
@@ -54,5 +35,29 @@ public class Proveedor {
 
     public void setRazonSocial(String razonSocial) {
         this.razonSocial = razonSocial;
+    }
+
+    public String getNombreEmpresa() {
+        return nombreEmpresa;
+    }
+
+    public void setNombreEmpresa(String nombreEmpresa) {
+        this.nombreEmpresa = nombreEmpresa;
+    }
+
+    public List<Herramienta> getHerramientas() {
+        return herramientas;
+    }
+
+    public void setHerramientas(List<Herramienta> herramientas) {
+        this.herramientas = herramientas;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
     }
 }

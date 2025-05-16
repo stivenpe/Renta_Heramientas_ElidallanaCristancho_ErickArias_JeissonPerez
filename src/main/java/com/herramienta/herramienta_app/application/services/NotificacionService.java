@@ -4,71 +4,45 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-
-import com.herramienta.herramienta_app.domain.entities.Herramienta;
 import com.herramienta.herramienta_app.domain.entities.Notificacion;
-import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.NotificacionRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
-import com.herramienta.herramienta_app.infrastructure.repositories.EmailSender;
-import com.herramienta.herramienta_app.domain.entities.Usuario;
 
+import lombok.RequiredArgsConstructor;
+
+import com.herramienta.herramienta_app.domain.entities.Usuario;
+import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
 
 
 
 @Service
+@RequiredArgsConstructor
 public class NotificacionService {
-     private final NotificacionRepository notificacionRepository;
-    private final HerramientaRepository herramientaRepository;
+    private final NotificacionRepository notificacionRepository;
     private final UsuarioRepository usuarioRepository;
-    private final EmailSender emailSender;
-
-    public NotificacionService(NotificacionRepository notificacionRepository,
-                               HerramientaRepository herramientaRepository,
-                               UsuarioRepository usuarioRepository,
-                               EmailSender emailSender) {
-        this.notificacionRepository = notificacionRepository;
-        this.herramientaRepository = herramientaRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.emailSender = emailSender;
+    
+    public Notificacion crearNotificacion(Long usuarioId, String titulo, String mensaje) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+            .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
+            
+        Notificacion notificacion = new Notificacion();
+        notificacion.setTitulo(titulo);
+        notificacion.setMensaje(mensaje);
+        notificacion.setUsuario(usuario);
+        notificacion.setFechaCreacion(LocalDateTime.now());
+        
+        return notificacionRepository.save(notificacion);
     }
-
-    public void enviarNotificacion(Notificacion notificacion) {
-        emailSender.sendEmail(
-            notificacion.getUsuario().getEmail(),
-            notificacion.getMensaje()
-        );
+    
+    public List<Notificacion> obtenerNotificacionesNoLeidas(Long usuarioId) {
+        return notificacionRepository.findByUsuarioIdAndLeidaFalse(usuarioId);
+    }
+    
+    public void marcarComoLeida(Long notificacionId) {
+        Notificacion notificacion = notificacionRepository.findById(notificacionId)
+            .orElseThrow(() -> new IllegalArgumentException("Notificación no encontrada"));
+            
+        notificacion.setLeida(true);
         notificacionRepository.save(notificacion);
     }
-
-    public void enviarRecordatorioDeDevolucion(Long idCliente) {
-        Usuario usuario = usuarioRepository.findById(idCliente)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + idCliente));
-
-        List<Herramienta> herramientasPendientes = herramientaRepository
-            .findHerramientasNoDevueltasPorUsuario(idCliente);
-
-        if (herramientasPendientes.isEmpty()) {
-            return;
-        }
-
-        StringBuilder mensaje = new StringBuilder("Tienes herramientas pendientes de devolución:\n");
-        for (Herramienta herramienta : herramientasPendientes) {
-            mensaje.append("- ")
-                   .append(herramienta.getNombre())
-                   .append(" (vencía el ")
-                   .append(herramienta.getFechaLimiteDevolucion())
-                   .append(")\n");
-        }
-
-        Notificacion notificacion = new Notificacion();
-        notificacion.setUsuario(usuario);
-        notificacion.setMensaje(mensaje.toString());
-        notificacion.setFecha(LocalDateTime.now());
-        notificacion.setLeida(false);
-        notificacion.setTipo("Recordatorio de Devolución");
-
-        enviarNotificacion(notificacion);
-    }
-
 }

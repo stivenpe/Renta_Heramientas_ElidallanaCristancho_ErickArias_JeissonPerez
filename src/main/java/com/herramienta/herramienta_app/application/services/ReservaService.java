@@ -1,68 +1,48 @@
 package com.herramienta.herramienta_app.application.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.herramienta.herramienta_app.domain.dtos.ReservaDto;
-import com.herramienta.herramienta_app.domain.entities.Cliente;
-import com.herramienta.herramienta_app.domain.entities.Herramienta;
 import com.herramienta.herramienta_app.domain.entities.Reserva;
-import com.herramienta.herramienta_app.infrastructure.repositories.ClienteRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
+import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
+
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReservaService {
+    private final ReservaRepository reservaRepository;
+    private final HerramientaRepository herramientaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final NotificacionService notificacionService;
 
-    @Autowired
-    private ReservaRepository reservaRepository;
-
-    @Autowired
-    private HerramientaRepository herramientaRepository;
-
-    @Autowired
-    private ClienteRepository clienteRepository;
-
-    public Reserva crearReserva(ReservaDto dto) {
-        Herramienta herramienta = herramientaRepository.findById(dto.getIdHerramienta())
-                .orElseThrow(() -> new RuntimeException("Herramienta no encontrada"));
-
-        if (!herramienta.getDisponible()) {
-            throw new RuntimeException("La herramienta no está disponible");
-
-        }
-
-        Cliente cliente = clienteRepository.findById(dto.getIdCliente())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
-        Reserva reserva = new Reserva();
-        reserva.setHerramienta(herramienta);
-        reserva.setCliente(cliente);
-        reserva.setFechaInicio(dto.getFechaInicio());
-        reserva.setFechaFin(dto.getFechaFin());
-        reserva.setTotal(dto.getTotal());
-        reserva.setEstado("Confirmada");
-
-        herramienta.setDisponible(false);
-        herramientaRepository.save(herramienta);
-
-        return reservaRepository.save(reserva);
+    public ReservaDto crearReserva(ReservaDto reservaDto) {
+        return null;
     }
 
-    public void cancelarReserva(Long idReserva) {
-        Reserva reserva = reservaRepository.findById(idReserva)
-        .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+    public List<ReservaDto> listarPorProveedor(Long proveedorId) {
+        List<Reserva> reservas = reservaRepository.findByProveedorId(proveedorId);
 
-                
-
-        reserva.setEstado("Cancelada");
-        reservaRepository.save(reserva);
-
-        Herramienta herramienta = reserva.getHerramienta();
-        herramienta.setDisponible(true);
-        herramientaRepository.save(herramienta);
+        return reservas.stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
     }
 
-    // Métodos para obtener historial de reservas
+    private ReservaDto mapToDTO(Reserva reserva) {
+        ReservaDto dto = new ReservaDto();
+        dto.setId(reserva.getId());
+        dto.setFechaInicio(reserva.getFechaInicio());
+        dto.setFechaFin(reserva.getFechaFin());
+        dto.setCostoTotal(reserva.getCostoTotal());
+        dto.setEstado(reserva.getEstado());
+        dto.setHerramientaId(reserva.getHerramienta().getId());
+        dto.setClienteId(reserva.getCliente().getId());
+        dto.setProveedorId(reserva.getProveedor().getId());
+        return dto;
+    }
 }
-

@@ -1,61 +1,72 @@
 package com.herramienta.herramienta_app.application.services;
 
-import com.stripe.Stripe;
-import com.stripe.model.PaymentIntent;
-import com.stripe.param.PaymentIntentCreateParams;
+import com.herramienta.herramienta_app.domain.dtos.PagoDto;
+import com.herramienta.herramienta_app.domain.entities.Pago;
+import com.herramienta.herramienta_app.domain.entities.Reserva;
+import com.herramienta.herramienta_app.domain.exceptions.PagoFallidoException;
+import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
+import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
 
-import java.math.BigDecimal;
-
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.entities.Pago;
-import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
-
-
-import jakarta.annotation.PostConstruct;
+import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class PagoService {
 
     private final PagoRepository pagoRepository;
+    private final ReservaRepository reservaRepository;
+    private final FacturaService facturaService;
+    private final NotificacionService notificacionService;
 
-    public PagoService(PagoRepository pagoRepository) {
-        this.pagoRepository = pagoRepository;
-    }
+    @Transactional
+    public PagoDto procesarPago(PagoDto pagoDto) {
+        Reserva reserva = reservaRepository.findById(pagoDto.getReservaId())
+            .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
 
-    // Inicializa Stripe al iniciar la aplicación
-    @PostConstruct
-    public void initStripe() {
-        Stripe.apiKey = "sk_test_..."; // ⚠️ Usa una variable de entorno en producción
-    }
-
-    public void procesarPago(Pago pago) {
-        if (pago == null || pago.getMonto() == null) {
-            throw new IllegalArgumentException("Pago o monto no pueden ser nulos.");
+        if (!"PENDIENTE".equals(reserva.getEstado())) {
+            throw new PagoFallidoException("La reserva no está pendiente de pago");
         }
 
-        // Convertimos el monto a centavos (ej. 20.50 => 2050)
-        long montoCentavos = pago.getMonto().multiply(BigDecimal.valueOf(100)).longValue();
+        Pago pago = new Pago();
+        pago.setEstado("COMPLETADO");
+        pago.setFechaPago(LocalDateTime.now());
+        pago.setMetodoPago(pagoDto.getMetodoPago());
+        pago.setMonto(pagoDto.getMonto());
+        pago.setReserva(reserva);
 
-        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(montoCentavos)
-                .setCurrency("usd")
-                .build();
+        Pago saved = pagoRepository.save(pago);
 
-        try {
-            PaymentIntent paymentIntent = PaymentIntent.create(params);
+        reserva.setEstado("APROBADA");
+        reservaRepository.save(reserva);
 
-            // Puedes guardar más detalles del PaymentIntent si lo deseas
-            pago.setEstado("Completado");
-            pago.setFecha(java.time.LocalDateTime.now());
+        facturaService.generarFactura(reserva);
 
-        } catch (Exception e) {
-            pago.setEstado("Fallido");
-            pago.setFecha(java.time.LocalDateTime.now());
-            throw new RuntimeException("Error al procesar el pago: " + e.getMessage(), e);
-        }
+        notificacionService.crearNotificacion(
+            reserva.getCliente().getId(),
+            "Pago completado",
+            "Tu pago por la reserva #" + reserva.getId() + " ha sido procesado"
+        );
 
-        // Guardamos el resultado del pago
-        pagoRepository.save(pago);
+        notificacionService.crearNotificacion(
+            reserva.getProveedor().getId(),
+            "Pago recibido",
+            "Has recibido un pago por la reserva #" + reserva.getId()
+        );
+
+        return mapToDTO(saved);
+    }
+
+    private PagoDto mapToDTO(Pago pago) {
+        PagoDto dto = new PagoDto();
+        dto.setId(pago.getId());
+        dto.setEstado(pago.getEstado());
+        dto.setMetodoPago(pago.getMetodoPago());
+        dto.setMonto(pago.getMonto());
+        dto.setReservaId(pago.getReserva() != null ? pago.getReserva().getId() : null);
+        return dto;
     }
 }
