@@ -13,7 +13,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtils {
     private static final String SECRET_KEY = "your-secret-key";
-    private static final long EXPIRATION_TIME = 86400000; // 24 horas
+    private static final long EXPIRATION_TIME = 86400000; 
 
     public String generateToken(Usuario usuario) {
         Date now = new Date();
