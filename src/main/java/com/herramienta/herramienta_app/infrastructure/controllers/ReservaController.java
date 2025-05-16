@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.herramienta.herramienta_app.application.services.ReservaService;
+import com.herramienta.herramienta_app.domain.dtos.ReservaDto;
 
 import lombok.RequiredArgsConstructor;
 

@@ -5,14 +5,18 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
+import com.herramienta.herramienta_app.domain.dtos.PagoDto;
 import com.herramienta.herramienta_app.domain.entities.Pago;
+import com.herramienta.herramienta_app.domain.entities.Reserva;
 import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
-
+import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,8 +28,8 @@ public class PagoService {
     private final NotificacionService notificacionService;
     
     @Transactional
-    public PagoDTO procesarPago(PagoDTO pagoDTO) {
-        Reserva reserva = reservaRepository.findById(pagoDTO.getReservaId())
+    public PagoDto procesarPago(PagoDto PagoDto) {
+        Reserva reserva = reservaRepository.findById(PagoDto.getReservaId())
             .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
             
         if (!"PENDIENTE".equals(reserva.getEstado())) {

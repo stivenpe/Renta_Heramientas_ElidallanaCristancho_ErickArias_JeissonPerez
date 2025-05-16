@@ -7,9 +7,10 @@ import com.herramienta.herramienta_app.domain.dtos.ReservaDto;
 import com.herramienta.herramienta_app.domain.entities.Cliente;
 import com.herramienta.herramienta_app.domain.entities.Herramienta;
 import com.herramienta.herramienta_app.domain.entities.Reserva;
-import com.herramienta.herramienta_app.infrastructure.repositories.ClienteRepository;
+import com.herramienta.herramienta_app.domain.entities.Usuario;
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
+import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,15 +22,15 @@ public class ReservaService {
     private final UsuarioRepository usuarioRepository;
     private final NotificacionService notificacionService;
     
-    public ReservaDTO crearReserva(ReservaDTO reservaDTO) {
-        Herramienta herramienta = herramientaRepository.findById(reservaDTO.getHerramientaId())
+    public ReservaDto crearReserva(ReservaDto ReservaDto) {
+        Herramienta herramienta = herramientaRepository.findById(ReservaDto.getHerramientaId())
             .orElseThrow(() -> new HerramientaNoDisponibleException("Herramienta no encontrada"));
             
         if (herramienta.getCantidadDisponible() <= 0) {
             throw new HerramientaNoDisponibleException("Herramienta no disponible");
         }
         
-        Usuario cliente = usuarioRepository.findById(reservaDTO.getClienteId())
+        Usuario cliente = usuarioRepository.findById(ReservaDto.getClienteId())
             .orElseThrow(() -> new UsuarioNoEncontradoException("Cliente no encontrado"));
             
         Reserva reserva = new Reserva();

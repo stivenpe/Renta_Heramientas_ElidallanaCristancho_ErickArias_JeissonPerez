@@ -10,9 +10,7 @@ import com.herramienta.herramienta_app.domain.dtos.HerramientaDto;
 import com.herramienta.herramienta_app.domain.entities.Categoria;
 import com.herramienta.herramienta_app.domain.entities.Herramienta;
 import com.herramienta.herramienta_app.domain.entities.Proveedor;
-import com.herramienta.herramienta_app.infrastructure.repositories.CategoriaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
-import com.herramienta.herramienta_app.infrastructure.repositories.ProveedorRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,13 +22,13 @@ public class HerramientaService {
     private final ProveedorRepository proveedorRepository;
     private final CategoriaRepository categoriaRepository;
     
-    public List<HerramientaDTO> buscarHerramientasDisponibles() {
+    public List<HerramientaDto> buscarHerramientasDisponibles() {
         return herramientaRepository.findDisponibles().stream()
             .map(this::mapToDTO)
             .collect(Collectors.toList());
     }
     
-    public HerramientaDTO crearHerramienta(HerramientaDTO herramientaDTO, Long proveedorId) {
+    public HerramientaDto crearHerramienta(HerramientaDto herramientaDTO, Long proveedorId) {
         Proveedor proveedor = proveedorRepository.findById(proveedorId)
             .orElseThrow(() -> new UsuarioNoEncontradoException("Proveedor no encontrado"));
             
