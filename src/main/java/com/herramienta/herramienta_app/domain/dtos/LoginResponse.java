@@ -1,11 +1,11 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
 
-public class LoginResponseDTO {
+public class LoginResponse {
     private String token;
-    private UsuarioDTO usuario;
+    private Usuario usuario;
 
-    public LoginResponseDTO(String token, UsuarioDTO usuario) {
+    public LoginResponse(String token, Usuario usuario) {
         this.token = token;
         this.usuario = usuario;
     }
@@ -18,11 +18,11 @@ public class LoginResponseDTO {
         this.token = token;
     }
 
-    public UsuarioDTO getUsuario() {
+    public Usuario getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(UsuarioDTO usuario) {
+    public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 }

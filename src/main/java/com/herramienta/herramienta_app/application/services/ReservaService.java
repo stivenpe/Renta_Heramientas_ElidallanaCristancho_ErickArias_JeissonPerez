@@ -2,8 +2,7 @@ package com.herramienta.herramienta_app.application.services;
 
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.dtos.ReservaDTO;
-import com.herramienta.herramienta_app.domain.entities.Reserva;
+import com.herramienta.herramienta_app.domain.dtos.Reserva;
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
@@ -21,28 +20,29 @@ public class ReservaService {
     private final UsuarioRepository usuarioRepository;
     private final NotificacionService notificacionService;
 
-    public ReservaDTO crearReserva(ReservaDTO reservaDto) {
+    public com.herramienta.herramienta_app.domain.dtos.Reserva crearReserva(com.herramienta.herramienta_app.domain.dtos.Reserva reservaDto) {
         return null;
     }
 
-    public List<ReservaDTO> listarPorProveedor(Long proveedorId) {
-        List<Reserva> reservas = reservaRepository.findByProveedorId(proveedorId);
+    public List<com.herramienta.herramienta_app.domain.dtos.Reserva> listarPorProveedor(Long proveedorId) {
+        List<com.herramienta.herramienta_app.domain.entities.Reserva> reservasEntities = 
+            reservaRepository.findByProveedorId(proveedorId);
 
-        return reservas.stream()
+        return reservasEntities.stream()
             .map(this::mapToDTO)
             .collect(Collectors.toList());
     }
 
-    private ReservaDTO mapToDTO(Reserva reserva) {
-        ReservaDTO dto = new ReservaDTO();
-        dto.setId(reserva.getId());
-        dto.setFechaInicio(reserva.getFechaInicio());
-        dto.setFechaFin(reserva.getFechaFin());
-        dto.setCostoTotal(reserva.getCostoTotal());
-        dto.setEstado(reserva.getEstado());
-        dto.setHerramientaId(reserva.getHerramienta().getId());
-        dto.setClienteId(reserva.getCliente().getId());
-        dto.setProveedorId(reserva.getProveedor().getId());
+    private com.herramienta.herramienta_app.domain.dtos.Reserva mapToDTO(com.herramienta.herramienta_app.domain.entities.Reserva reservaEntity) {
+        com.herramienta.herramienta_app.domain.dtos.Reserva dto = new com.herramienta.herramienta_app.domain.dtos.Reserva();
+        dto.setId(reservaEntity.getId());
+        dto.setFechaInicio(reservaEntity.getFechaInicio());
+        dto.setFechaFin(reservaEntity.getFechaFin());
+        dto.setCostoTotal(reservaEntity.getCostoTotal());
+        dto.setEstado(reservaEntity.getEstado());
+        dto.setHerramientaId(reservaEntity.getHerramienta().getId());
+        dto.setClienteId(reservaEntity.getCliente().getId());
+        dto.setProveedorId(reservaEntity.getProveedor().getId());
         return dto;
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.herramienta.herramienta_app.application.services.PagoService;
-import com.herramienta.herramienta_app.domain.dtos.PagoDTO;
+import com.herramienta.herramienta_app.domain.dtos.Pago;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,8 +20,8 @@ public class PagoController {
     
     @PostMapping
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<PagoDTO> procesarPago(@RequestBody PagoDTO pagoDTO) {
-        PagoDTO processed = pagoService.procesarPago(pagoDTO);
+    public ResponseEntity<Pago> procesarPago(@RequestBody Pago pagoDTO) {
+        Pago processed = pagoService.procesarPago(pagoDTO);
         return ResponseEntity.ok(processed);
     }
 }

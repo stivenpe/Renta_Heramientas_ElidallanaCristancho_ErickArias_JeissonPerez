@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.herramienta.herramienta_app.application.services.HerramientaService;
-import com.herramienta.herramienta_app.domain.dtos.HerramientaDTO;
+import com.herramienta.herramienta_app.domain.dtos.Herramienta;
 import com.herramienta.herramienta_app.domain.entities.Usuario;
 
 import lombok.RequiredArgsConstructor;
@@ -25,17 +25,17 @@ public class HerramientaController {
     private final HerramientaService herramientaService;
     
     @GetMapping
-    public ResponseEntity<List<HerramientaDTO>> listarHerramientasDisponibles() {
-        List<HerramientaDTO> herramientas = herramientaService.buscarHerramientasDisponibles();
+    public ResponseEntity<List<Herramienta>> listarHerramientasDisponibles() {
+        List<Herramienta> herramientas = herramientaService.buscarHerramientasDisponibles();
         return ResponseEntity.ok(herramientas);
     }
     
     @PostMapping
     @PreAuthorize("hasRole('PROVEEDOR')")
-    public ResponseEntity<HerramientaDTO> crearHerramienta(
-            @RequestBody HerramientaDTO herramientaDTO,
+    public ResponseEntity<Herramienta> crearHerramienta(
+            @RequestBody Herramienta herramientaDTO,
             @AuthenticationPrincipal Usuario usuario) {
-        HerramientaDTO created = herramientaService.crearHerramienta(herramientaDTO, usuario.getId());
+        Herramienta created = herramientaService.crearHerramienta(herramientaDTO, usuario.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
     

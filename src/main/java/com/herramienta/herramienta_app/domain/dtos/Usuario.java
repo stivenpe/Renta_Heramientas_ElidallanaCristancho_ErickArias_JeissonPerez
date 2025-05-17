@@ -1,8 +1,8 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
-import com.herramienta.herramienta_app.domain.dtos.UsuarioDTO;
+import com.herramienta.herramienta_app.domain.dtos.Usuario;
 
-public class UsuarioDTO {
+public class Usuario {
     private Long id;
     private String nombre;
     private String email;
@@ -10,9 +10,9 @@ public class UsuarioDTO {
     private String direccion;
     private String rol;
 
-    public UsuarioDTO() {}
+    public Usuario() {}
 
-    public UsuarioDTO(Long id, String nombre, String email, String telefono, String direccion, String rol) {
+    public Usuario(Long id, String nombre, String email, String telefono, String direccion, String rol) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;

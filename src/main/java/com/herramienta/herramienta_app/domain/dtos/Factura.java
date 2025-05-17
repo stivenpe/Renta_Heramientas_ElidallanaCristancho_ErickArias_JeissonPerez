@@ -2,7 +2,7 @@ package com.herramienta.herramienta_app.domain.dtos;
 
 import java.time.LocalDate;
 
-public class FacturaDTO {
+public class Factura {
      private Long id;
     private String folio;
     private LocalDate fechaEmision;

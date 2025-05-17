@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.herramienta.herramienta_app.application.services.ReporteService;
-import com.herramienta.herramienta_app.domain.dtos.ReporteDTO;
+import com.herramienta.herramienta_app.domain.dtos.Reporte;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,10 +23,10 @@ public class ReporteController {
     private final ReporteService reporteService;
     
     @GetMapping("/ingresos")
-    public ResponseEntity<ReporteDTO> generarReporteIngresos(
+    public ResponseEntity<Reporte> generarReporteIngresos(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
-        ReporteDTO reporte = reporteService.generarReporteIngresos(inicio, fin);
+        Reporte reporte = reporteService.generarReporteIngresos(inicio, fin);
         return ResponseEntity.ok(reporte);
     }
 }

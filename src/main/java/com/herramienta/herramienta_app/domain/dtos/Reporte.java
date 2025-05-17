@@ -2,9 +2,8 @@ package com.herramienta.herramienta_app.domain.dtos;
 
 import java.time.LocalDate;
 
-import lombok.Data;
 
-public class ReporteDTO {
+public class Reporte {
     private String tipo;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;

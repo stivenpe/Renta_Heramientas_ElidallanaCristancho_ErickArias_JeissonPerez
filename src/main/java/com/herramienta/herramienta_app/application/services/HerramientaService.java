@@ -1,7 +1,5 @@
 package com.herramienta.herramienta_app.application.services;
 
-import com.herramienta.herramienta_app.domain.dtos.HerramientaDTO;
-import com.herramienta.herramienta_app.domain.entities.*;
 import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
 import com.herramienta.herramienta_app.infrastructure.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -17,44 +15,57 @@ public class HerramientaService {
     private final ProveedorRepository proveedorRepository;
     private final CategoriaRepository categoriaRepository;
     
-    public List<HerramientaDTO> buscarHerramientasDisponibles() {
+    public List<com.herramienta.herramienta_app.domain.dtos.Herramienta> buscarHerramientasDisponibles() {
         return herramientaRepository.findByCantidadDisponibleGreaterThan(0).stream()
             .map(this::mapToDTO)
             .collect(Collectors.toList());
     }
     
-    public HerramientaDTO crearHerramienta(HerramientaDTO herramientaDTO, Long proveedorId) {
-        Proveedor proveedor = proveedorRepository.findById(proveedorId)
+    public com.herramienta.herramienta_app.domain.dtos.Herramienta crearHerramienta(
+            com.herramienta.herramienta_app.domain.dtos.Herramienta herramientaDTO, 
+            Long proveedorId) {
+        
+        com.herramienta.herramienta_app.domain.entities.Proveedor proveedor = proveedorRepository.findById(proveedorId)
             .orElseThrow(() -> new UsuarioNoEncontradoException("Proveedor no encontrado"));
             
-        Categoria categoria = categoriaRepository.findByNombre(herramientaDTO.getCategoria())
+        com.herramienta.herramienta_app.domain.entities.Categoria categoria = categoriaRepository.findByNombre(herramientaDTO.getCategoria())
             .orElseThrow(() -> new IllegalArgumentException("Categoría no válida"));
             
-        Herramienta herramienta = new Herramienta();
-        herramienta.setNombre(herramientaDTO.getNombre());
-        herramienta.setDescripcion(herramientaDTO.getDescripcion());
-        herramienta.setModelo(herramientaDTO.getModelo());
-        herramienta.setMarca(herramientaDTO.getMarca());
-        herramienta.setCostoPorDia(herramientaDTO.getCostoPorDia());
-        herramienta.setCantidadDisponible(herramientaDTO.getCantidadDisponible());
-        herramienta.setProveedor(proveedor);
-        herramienta.setCategoria(categoria);
+        com.herramienta.herramienta_app.domain.entities.Herramienta herramientaEntity = 
+            new com.herramienta.herramienta_app.domain.entities.Herramienta();
         
-        Herramienta saved = herramientaRepository.save(herramienta);
+        herramientaEntity.setNombre(herramientaDTO.getNombre());
+        herramientaEntity.setDescripcion(herramientaDTO.getDescripcion());
+        herramientaEntity.setModelo(herramientaDTO.getModelo());
+        herramientaEntity.setMarca(herramientaDTO.getMarca());
+        herramientaEntity.setCostoPorDia(herramientaDTO.getCostoPorDia());
+        herramientaEntity.setCantidadDisponible(herramientaDTO.getCantidadDisponible());
+        herramientaEntity.setProveedor(proveedor);
+        herramientaEntity.setCategoria(categoria);
+        herramientaEntity.setActiva(true);
+        
+        com.herramienta.herramienta_app.domain.entities.Herramienta saved = 
+            herramientaRepository.save(herramientaEntity);
+        
         return mapToDTO(saved);
     }
     
-    private HerramientaDTO mapToDTO(Herramienta herramienta) {
-        HerramientaDTO dto = new HerramientaDTO();
-        dto.setId(herramienta.getId());
-        dto.setNombre(herramienta.getNombre());
-        dto.setDescripcion(herramienta.getDescripcion());
-        dto.setModelo(herramienta.getModelo());
-        dto.setMarca(herramienta.getMarca());
-        dto.setCostoPorDia(herramienta.getCostoPorDia());
-        dto.setCantidadDisponible(herramienta.getCantidadDisponible());
-        dto.setCategoria(herramienta.getCategoria().getNombre());
-        dto.setProveedor(herramienta.getProveedor().getNombreEmpresa());
+    private com.herramienta.herramienta_app.domain.dtos.Herramienta mapToDTO(
+            com.herramienta.herramienta_app.domain.entities.Herramienta herramientaEntity) {
+        
+        com.herramienta.herramienta_app.domain.dtos.Herramienta dto = 
+            new com.herramienta.herramienta_app.domain.dtos.Herramienta();
+        
+        dto.setId(herramientaEntity.getId());
+        dto.setNombre(herramientaEntity.getNombre());
+        dto.setDescripcion(herramientaEntity.getDescripcion());
+        dto.setModelo(herramientaEntity.getModelo());
+        dto.setMarca(herramientaEntity.getMarca());
+        dto.setCostoPorDia(herramientaEntity.getCostoPorDia());
+        dto.setCantidadDisponible(herramientaEntity.getCantidadDisponible());
+        dto.setCategoria(herramientaEntity.getCategoria().getNombre());
+        dto.setProveedor(herramientaEntity.getProveedor().getNombreEmpresa());
+        
         return dto;
     }
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.dtos.ReporteDTO;
+import com.herramienta.herramienta_app.domain.dtos.Reporte;
 import com.herramienta.herramienta_app.domain.entities.Pago;
 import com.herramienta.herramienta_app.infrastructure.repositories.HerramientaRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
@@ -21,7 +21,7 @@ public class ReporteService {
     private final HerramientaRepository herramientaRepository;
     private final PagoRepository pagoRepository;
     
-    public ReporteDTO generarReporteIngresos(LocalDate inicio, LocalDate fin) {
+    public Reporte generarReporteIngresos(LocalDate inicio, LocalDate fin) {
         List<Pago> pagos = pagoRepository.findByFechaPagoBetween(
             inicio.atStartOfDay(),
             fin.atTime(23, 59, 59)
@@ -31,7 +31,7 @@ public class ReporteService {
             .mapToDouble(Pago::getMonto)
             .sum();
             
-        ReporteDTO reporte = new ReporteDTO();
+        Reporte reporte = new Reporte();
         reporte.setTipo("INGRESOS");
         reporte.setFechaInicio(inicio);
         reporte.setFechaFin(fin);

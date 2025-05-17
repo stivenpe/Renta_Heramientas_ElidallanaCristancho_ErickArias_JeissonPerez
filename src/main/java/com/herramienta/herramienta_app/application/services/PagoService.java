@@ -1,7 +1,5 @@
 package com.herramienta.herramienta_app.application.services;
 
-import com.herramienta.herramienta_app.domain.dtos.PagoDTO;
-import com.herramienta.herramienta_app.domain.entities.Pago;
 import com.herramienta.herramienta_app.domain.entities.Reserva;
 import com.herramienta.herramienta_app.domain.exceptions.PagoFallidoException;
 import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
@@ -23,7 +21,7 @@ public class PagoService {
     private final NotificacionService notificacionService;
 
     @Transactional
-    public PagoDTO procesarPago(PagoDTO pagoDto) {
+    public com.herramienta.herramienta_app.domain.dtos.Pago procesarPago(com.herramienta.herramienta_app.domain.dtos.Pago pagoDto) {
         Reserva reserva = reservaRepository.findById(pagoDto.getReservaId())
             .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
 
@@ -31,14 +29,14 @@ public class PagoService {
             throw new PagoFallidoException("La reserva no está pendiente de pago");
         }
 
-        Pago pago = new Pago();
-        pago.setEstado("COMPLETADO");
-        pago.setFechaPago(LocalDateTime.now());
-        pago.setMetodoPago(pagoDto.getMetodoPago());
-        pago.setMonto(pagoDto.getMonto());
-        pago.setReserva(reserva);
+        com.herramienta.herramienta_app.domain.entities.Pago pagoEntity = new com.herramienta.herramienta_app.domain.entities.Pago();
+        pagoEntity.setEstado("COMPLETADO");
+        pagoEntity.setFechaPago(LocalDateTime.now());
+        pagoEntity.setMetodoPago(pagoDto.getMetodoPago());
+        pagoEntity.setMonto(pagoDto.getMonto());
+        pagoEntity.setReserva(reserva);
 
-        Pago saved = pagoRepository.save(pago);
+        com.herramienta.herramienta_app.domain.entities.Pago saved = pagoRepository.save(pagoEntity);
 
         reserva.setEstado("APROBADA");
         reservaRepository.save(reserva);
@@ -60,13 +58,13 @@ public class PagoService {
         return mapToDTO(saved);
     }
 
-    private PagoDTO mapToDTO(Pago pago) {
-        PagoDTO dto = new PagoDTO();
-        dto.setId(pago.getId());
-        dto.setEstado(pago.getEstado());
-        dto.setMetodoPago(pago.getMetodoPago());
-        dto.setMonto(pago.getMonto());
-        dto.setReservaId(pago.getReserva() != null ? pago.getReserva().getId() : null);
+    private com.herramienta.herramienta_app.domain.dtos.Pago mapToDTO(com.herramienta.herramienta_app.domain.entities.Pago pagoEntity) {
+        com.herramienta.herramienta_app.domain.dtos.Pago dto = new com.herramienta.herramienta_app.domain.dtos.Pago();
+        dto.setId(pagoEntity.getId());
+        dto.setEstado(pagoEntity.getEstado());
+        dto.setMetodoPago(pagoEntity.getMetodoPago());
+        dto.setMonto(pagoEntity.getMonto());
+        dto.setReservaId(pagoEntity.getReserva() != null ? pagoEntity.getReserva().getId() : null);
         return dto;
     }
 }

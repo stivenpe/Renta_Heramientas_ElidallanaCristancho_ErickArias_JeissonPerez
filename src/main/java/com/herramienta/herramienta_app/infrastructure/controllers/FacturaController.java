@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import com.herramienta.herramienta_app.application.services.FacturaService;
-import com.herramienta.herramienta_app.domain.dtos.FacturaDTO;
+import com.herramienta.herramienta_app.domain.dtos.Factura;
 
 @RestController
 @RequestMapping("/api/facturas")
@@ -20,34 +20,34 @@ public class FacturaController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<FacturaDTO>> listarTodasFacturas() {
-        List<FacturaDTO> facturas = facturaService.listarTodas();
+    public ResponseEntity<List<Factura>> listarTodasFacturas() {
+        List<Factura> facturas = facturaService.listarTodas();
         return ResponseEntity.ok(facturas);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FacturaDTO> obtenerFacturaPorId(@PathVariable Long id) {
-        FacturaDTO factura = facturaService.obtenerPorId(id);
+    public ResponseEntity<Factura> obtenerFacturaPorId(@PathVariable Long id) {
+        Factura factura = facturaService.obtenerPorId(id);
         return ResponseEntity.ok(factura);
     }
 
     @GetMapping("/reserva/{reservaId}")
-    public ResponseEntity<FacturaDTO> obtenerFacturaPorReserva(@PathVariable Long reservaId) {
-        FacturaDTO factura = facturaService.obtenerPorReservaId(reservaId);
+    public ResponseEntity<Factura> obtenerFacturaPorReserva(@PathVariable Long reservaId) {
+        Factura factura = facturaService.obtenerPorReservaId(reservaId);
         return ResponseEntity.ok(factura);
     }
 
     @GetMapping("/cliente/{clienteId}")
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<List<FacturaDTO>> listarFacturasPorCliente(@PathVariable Long clienteId) {
-        List<FacturaDTO> facturas = facturaService.listarPorClienteId(clienteId);
+    public ResponseEntity<List<Factura>> listarFacturasPorCliente(@PathVariable Long clienteId) {
+        List<Factura> facturas = facturaService.listarPorClienteId(clienteId);
         return ResponseEntity.ok(facturas);
     }
 
     @GetMapping("/proveedor/{proveedorId}")
     @PreAuthorize("hasRole('PROVEEDOR')")
-    public ResponseEntity<List<FacturaDTO>> listarFacturasPorProveedor(@PathVariable Long proveedorId) {
-        List<FacturaDTO> facturas = facturaService.listarPorProveedorId(proveedorId);
+    public ResponseEntity<List<Factura>> listarFacturasPorProveedor(@PathVariable Long proveedorId) {
+        List<Factura> facturas = facturaService.listarPorProveedorId(proveedorId);
         return ResponseEntity.ok(facturas);
     }
 

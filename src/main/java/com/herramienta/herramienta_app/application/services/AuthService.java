@@ -3,10 +3,9 @@ package com.herramienta.herramienta_app.application.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.dtos.LoginRequestDTO;
-import com.herramienta.herramienta_app.domain.dtos.LoginResponseDTO;
-import com.herramienta.herramienta_app.domain.dtos.UsuarioDTO;
-import com.herramienta.herramienta_app.domain.entities.Usuario;
+import com.herramienta.herramienta_app.domain.dtos.LoginRequest;
+import com.herramienta.herramienta_app.domain.dtos.LoginResponse;
+import com.herramienta.herramienta_app.domain.dtos.Usuario;
 import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
 import com.herramienta.herramienta_app.infrastructure.repositories.RolRepository;
 import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
@@ -21,26 +20,26 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     
-    public LoginResponseDTO login(LoginRequestDTO request) {
-        Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
+    public LoginResponse login(LoginRequest request) {
+        com.herramienta.herramienta_app.domain.entities.Usuario usuarioEntity = usuarioRepository.findByEmail(request.getEmail())
             .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
             
-        if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), usuarioEntity.getPassword())) {
             throw new UsuarioNoEncontradoException("Credenciales inválidas");
         }
         
-        if (!usuario.isActivo()) {
+        if (!usuarioEntity.isActivo()) {
             throw new UsuarioNoEncontradoException("Usuario desactivado");
         }
         
-        String token = jwtUtils.generateToken(usuario);
-        UsuarioDTO usuarioDTO = mapToDTO(usuario);
+        String token = jwtUtils.generateToken(usuarioEntity);
+        Usuario usuarioDTO = mapToDTO(usuarioEntity);
         
-        return new LoginResponseDTO(token, usuarioDTO);
+        return new LoginResponse(token, usuarioDTO);
     }
     
-    private UsuarioDTO mapToDTO(Usuario usuario) {
-        UsuarioDTO dto = new UsuarioDTO();
+    private Usuario mapToDTO(com.herramienta.herramienta_app.domain.entities.Usuario usuario) {
+        Usuario dto = new Usuario();
         dto.setId(usuario.getId());
         dto.setNombre(usuario.getNombre());
         dto.setEmail(usuario.getEmail());
