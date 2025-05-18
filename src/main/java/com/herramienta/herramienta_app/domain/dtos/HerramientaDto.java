@@ -1,7 +1,7 @@
 package com.herramienta.herramienta_app.domain.dtos;
 
 
-public class Herramienta {
+public class HerramientaDto {
      private Long id;
     private String nombre;
     private String descripcion;

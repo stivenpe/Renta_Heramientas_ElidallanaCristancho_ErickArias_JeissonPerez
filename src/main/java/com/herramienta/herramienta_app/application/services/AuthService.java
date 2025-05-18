@@ -1,51 +1,86 @@
 package com.herramienta.herramienta_app.application.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.herramienta.herramienta_app.domain.dtos.LoginRequest;
 import com.herramienta.herramienta_app.domain.dtos.LoginResponse;
-import com.herramienta.herramienta_app.domain.dtos.Usuario;
-import com.herramienta.herramienta_app.domain.exceptions.UsuarioNoEncontradoException;
-import com.herramienta.herramienta_app.infrastructure.repositories.RolRepository;
-import com.herramienta.herramienta_app.infrastructure.repositories.UsuarioRepository;
+import com.herramienta.herramienta_app.domain.dtos.RegisterRequest;
+import com.herramienta.herramienta_app.domain.entities.Rol;
+import com.herramienta.herramienta_app.domain.entities.Usuario;
+import com.herramienta.herramienta_app.infrastructure.repositories.Rol.RolRepository;
 import com.herramienta.herramienta_app.infrastructure.security.JwtUtils;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
-    private final UsuarioRepository usuarioRepository;
-    private final RolRepository rolRepository;
-    private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    
-    public LoginResponse login(LoginRequest request) {
-        com.herramienta.herramienta_app.domain.entities.Usuario usuarioEntity = usuarioRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
-            
-        if (!passwordEncoder.matches(request.getPassword(), usuarioEntity.getPassword())) {
-            throw new UsuarioNoEncontradoException("Credenciales inválidas");
-        }
-        
-        if (!usuarioEntity.isActivo()) {
-            throw new UsuarioNoEncontradoException("Usuario desactivado");
-        }
-        
-        String token = jwtUtils.generateToken(usuarioEntity);
-        Usuario usuarioDTO = mapToDTO(usuarioEntity);
-        
-        return new LoginResponse(token, usuarioDTO);
+    private final UsuarioService usuarioService;
+    private final PasswordEncoder passwordEncoder;
+    private final RolRepository rolRepository;
+    private final UsuarioDetailsServiceImpl usuarioDetailsService;
+
+    @Autowired
+    public AuthService(
+            AuthenticationManager authenticationManager,
+            JwtUtils jwtUtils,
+            UsuarioService usuarioService,
+            PasswordEncoder passwordEncoder,
+            RolRepository rolRepository,
+            UsuarioDetailsServiceImpl usuarioDetailsService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+        this.usuarioService = usuarioService;
+        this.passwordEncoder = passwordEncoder;
+        this.rolRepository = rolRepository;
+        this.usuarioDetailsService = usuarioDetailsService;
     }
-    
-    private Usuario mapToDTO(com.herramienta.herramienta_app.domain.entities.Usuario usuario) {
-        Usuario dto = new Usuario();
-        dto.setId(usuario.getId());
-        dto.setNombre(usuario.getNombre());
-        dto.setEmail(usuario.getEmail());
-        dto.setTelefono(usuario.getTelefono());
-        dto.setDireccion(usuario.getDireccion());
-        dto.setRol(usuario.getRol().getNombre());
-        return dto;
+
+    public LoginResponse login(String email, String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+        UserDetails userDetails = usuarioDetailsService.loadUserByUsername(email);
+        String token = jwtUtils.createToken(userDetails);
+
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(grantedAuthority -> grantedAuthority.getAuthority().replace("ROLE_", ""))
+                .orElseThrow(() -> new RuntimeException("Usuario sin rol"));
+
+        return new LoginResponse(token, role);
+    }
+
+    public LoginResponse register(RegisterRequest request) {
+        if (usuarioService.existsByEmail(request.email())) {
+            throw new IllegalArgumentException("Email ya registrado");
+        }
+
+        Rol defaultRole = rolRepository.findByNombre("CLIENTE")
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+        Usuario usuario = new Usuario();
+        usuario.setNombre(request.nombre());
+        usuario.setEmail(request.email());
+        usuario.setPassword(passwordEncoder.encode(request.password()));
+        usuario.setTelefono(request.telefono());
+        usuario.setDireccion(request.direccion());
+        usuario.setActivo(true);
+        usuario.setRol(defaultRole);
+
+        Usuario savedUsuario = usuarioService.save(usuario);
+
+        UserDetails userDetails = usuarioDetailsService.loadUserByUsername(savedUsuario.getEmail());
+        String jwtToken = jwtUtils.createToken(userDetails);
+
+        return new LoginResponse(jwtToken, defaultRole.getNombre());
     }
 }

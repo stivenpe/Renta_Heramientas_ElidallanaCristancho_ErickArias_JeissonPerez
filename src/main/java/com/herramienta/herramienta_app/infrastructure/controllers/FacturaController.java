@@ -1,15 +1,12 @@
 package com.herramienta.herramienta_app.infrastructure.controllers;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
 import com.herramienta.herramienta_app.application.services.FacturaService;
-import com.herramienta.herramienta_app.domain.dtos.Factura;
+import com.herramienta.herramienta_app.domain.entities.Factura;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/facturas")
@@ -21,53 +18,29 @@ public class FacturaController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Factura>> listarTodasFacturas() {
-        List<Factura> facturas = facturaService.listarTodas();
-        return ResponseEntity.ok(facturas);
+        return ResponseEntity.ok(facturaService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Factura> obtenerFacturaPorId(@PathVariable Long id) {
-        Factura factura = facturaService.obtenerPorId(id);
-        return ResponseEntity.ok(factura);
+        return ResponseEntity.ok(facturaService.findById(id).orElseThrow());
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Factura> crearFactura(@RequestBody Factura factura) {
+        return ResponseEntity.status(201).body(facturaService.save(factura));
     }
 
     @GetMapping("/reserva/{reservaId}")
-    public ResponseEntity<Factura> obtenerFacturaPorReserva(@PathVariable Long reservaId) {
-        Factura factura = facturaService.obtenerPorReservaId(reservaId);
-        return ResponseEntity.ok(factura);
+    public ResponseEntity<Factura> obtenerPorReservaId(@PathVariable Long reservaId) {
+        return ResponseEntity.ok(facturaService.findById(reservaId).orElseThrow());
     }
 
-    @GetMapping("/cliente/{clienteId}")
-    @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<List<Factura>> listarFacturasPorCliente(@PathVariable Long clienteId) {
-        List<Factura> facturas = facturaService.listarPorClienteId(clienteId);
-        return ResponseEntity.ok(facturas);
-    }
-
-    @GetMapping("/proveedor/{proveedorId}")
-    @PreAuthorize("hasRole('PROVEEDOR')")
-    public ResponseEntity<List<Factura>> listarFacturasPorProveedor(@PathVariable Long proveedorId) {
-        List<Factura> facturas = facturaService.listarPorProveedorId(proveedorId);
-        return ResponseEntity.ok(facturas);
-    }
-
-    @GetMapping("/{id}/descargar-pdf")
-    public ResponseEntity<byte[]> descargarPdf(@PathVariable Long id) {
-        byte[] pdf = facturaService.descargarPdf(id);
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "attachment; filename=\"factura_" + id + ".pdf\"")
-                .body(pdf);
-    }
-
-    @GetMapping("/{id}/descargar-xml")
-    public ResponseEntity<byte[]> descargarXml(@PathVariable Long id) {
-        byte[] xml = facturaService.descargarXml(id);
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/xml")
-                .header("Content-Disposition", "attachment; filename=\"factura_" + id + ".xml\"")
-                .body(xml);
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> eliminarFactura(@PathVariable Long id) {
+        facturaService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
-
-

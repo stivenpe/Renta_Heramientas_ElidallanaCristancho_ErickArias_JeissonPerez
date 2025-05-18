@@ -8,18 +8,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.herramienta.herramienta_app.application.services.AuthService;
 import com.herramienta.herramienta_app.domain.dtos.LoginRequest;
 import com.herramienta.herramienta_app.domain.dtos.LoginResponse;
+import com.herramienta.herramienta_app.domain.dtos.RegisterRequest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
     
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        LoginResponse response = authService.login(request);
+        LoginResponse response = authService.login(request.email(), request.password());
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/registro")
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
     }
 }
