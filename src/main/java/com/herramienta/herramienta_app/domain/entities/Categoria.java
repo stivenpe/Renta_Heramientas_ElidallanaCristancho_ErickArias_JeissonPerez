@@ -19,7 +19,7 @@ public class Categoria {
     private String nombre;
     private String descripcion;
 
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "categorias")
     private List<Herramienta> herramientas;
 
     public Long getId() {

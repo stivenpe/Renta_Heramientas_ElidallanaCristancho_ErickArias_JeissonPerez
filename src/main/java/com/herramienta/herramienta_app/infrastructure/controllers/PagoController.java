@@ -9,7 +9,7 @@ import com.herramienta.herramienta_app.domain.entities.Pago;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/pagos")
+@RequestMapping("/pagos")
 @RequiredArgsConstructor
 public class PagoController {
 

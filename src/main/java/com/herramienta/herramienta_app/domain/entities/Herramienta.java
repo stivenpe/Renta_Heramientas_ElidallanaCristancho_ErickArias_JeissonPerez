@@ -28,7 +28,7 @@ public class Herramienta {
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+    private Categoria categorias;
 
     @ManyToOne
     @JoinColumn(name = "proveedor_id")
@@ -104,12 +104,12 @@ public class Herramienta {
         this.activa = activa;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public Categoria getCategorias() {
+        return categorias;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setCategorias(Categoria categorias) {
+        this.categorias = categorias;
     }
 
     public Proveedor getProveedor() {
