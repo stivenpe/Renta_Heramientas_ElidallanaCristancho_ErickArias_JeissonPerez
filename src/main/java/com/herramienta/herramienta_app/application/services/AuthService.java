@@ -47,7 +47,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(email, password));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+
         UserDetails userDetails = usuarioDetailsService.loadUserByUsername(email);
         String token = jwtUtils.createToken(userDetails);
 
@@ -64,8 +64,12 @@ public class AuthService {
             throw new IllegalArgumentException("Email ya registrado");
         }
 
-        Rol defaultRole = rolRepository.findByNombre("CLIENTE")
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        String rolNombre = (request.rol() != null && !request.rol().isBlank())
+                ? request.rol().toUpperCase()
+                : "CLIENTE";
+
+        Rol rolAsignado = rolRepository.findByNombre(rolNombre)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado: " + rolNombre));
 
         Usuario usuario = new Usuario();
         usuario.setNombre(request.nombre());
@@ -74,13 +78,14 @@ public class AuthService {
         usuario.setTelefono(request.telefono());
         usuario.setDireccion(request.direccion());
         usuario.setActivo(true);
-        usuario.setRol(defaultRole);
+        usuario.setRol(rolAsignado);
 
         Usuario savedUsuario = usuarioService.save(usuario);
 
         UserDetails userDetails = usuarioDetailsService.loadUserByUsername(savedUsuario.getEmail());
         String jwtToken = jwtUtils.createToken(userDetails);
 
-        return new LoginResponse(jwtToken, defaultRole.getNombre());
+        return new LoginResponse(jwtToken, rolAsignado.getNombre());
     }
+
 }

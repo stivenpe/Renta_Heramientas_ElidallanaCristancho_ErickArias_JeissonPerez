@@ -19,5 +19,8 @@ public record RegisterRequest(
     @NotBlank(message = "Direccion es requerido")
     String direccion,
     
-    String telefono
+    @NotBlank(message = "Telefono no puede quedar en blanco")
+    String telefono,
+
+    String rol
 ) {}
