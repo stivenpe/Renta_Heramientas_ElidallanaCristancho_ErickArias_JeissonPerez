@@ -1,49 +1,52 @@
 package com.herramienta.herramienta_app.infrastructure.controllers;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import com.herramienta.herramienta_app.application.services.HerramientaService;
-import com.herramienta.herramienta_app.domain.dtos.HerramientaDto;
 import com.herramienta.herramienta_app.domain.entities.Herramienta;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/herramientas")
+@RequiredArgsConstructor
 public class HerramientaController {
 
-    @Autowired
-    private HerramientaService herramientaService;
-
-    @PostMapping
-    public ResponseEntity<Herramienta> crearHerramienta(@ModelAttribute HerramientaDto dto) {
-        Herramienta herramienta = herramientaService.crearHerramienta(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(herramienta);
-    }
+    private final HerramientaService herramientaService;
 
     @GetMapping
-    public ResponseEntity<List<Herramienta>> obtenerTodas() {
-        return ResponseEntity.ok(herramientaService.obtenerTodas());
+    public ResponseEntity<List<Herramienta>> listarHerramientasDisponibles() {
+        return ResponseEntity.ok(herramientaService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Herramienta> obtenerPorId(@PathVariable Long id) {
-        Herramienta herramienta = herramientaService.obtenerPorId(id);
-        return ResponseEntity.ok(herramienta);
+    public ResponseEntity<Herramienta> obtenerHerramienta(@PathVariable Long id) {
+        return ResponseEntity.ok(herramientaService.findById(id).orElseThrow());
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('PROVEEDOR', 'ADMIN')")
+    public ResponseEntity<Herramienta> crearHerramienta(@RequestBody Herramienta herramienta) {
+        Herramienta created = herramientaService.save(herramienta);
+        return ResponseEntity.status(201).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Herramienta> actualizar(@PathVariable Long id, @RequestBody HerramientaDto dto) {
-        Herramienta herramienta = herramientaService.actualizarHerramienta(id, dto);
-        return ResponseEntity.ok(herramienta);
+    @PreAuthorize("hasAnyRole('PROVEEDOR', 'ADMIN')")
+    public ResponseEntity<Herramienta> update(@PathVariable Long id, @RequestBody Herramienta herramienta) {
+        if (!herramientaService.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        herramienta.setId(id);
+        Herramienta actualizarHerramienta = herramientaService.save(herramienta);
+        return ResponseEntity.ok(actualizarHerramienta);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        herramientaService.eliminarHerramienta(id);
+    @PreAuthorize("hasAnyRole('PROVEEDOR', 'ADMIN')")
+    public ResponseEntity<Void> eliminarHerramienta(@PathVariable Long id) {
+        herramientaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

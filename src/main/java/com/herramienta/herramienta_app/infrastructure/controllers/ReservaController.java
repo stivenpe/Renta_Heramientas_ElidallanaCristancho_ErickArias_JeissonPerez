@@ -1,37 +1,40 @@
 package com.herramienta.herramienta_app.infrastructure.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import com.herramienta.herramienta_app.application.services.ReservaService;
-import com.herramienta.herramienta_app.domain.dtos.ReservaDto;
 import com.herramienta.herramienta_app.domain.entities.Reserva;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/reservas")
+@RequiredArgsConstructor
 public class ReservaController {
 
-    @Autowired
-    private ReservaService reservaService;
+    private final ReservaService reservaService;
+
+    @GetMapping
+    public ResponseEntity<List<Reserva>> listarTodas() {
+        return ResponseEntity.ok(reservaService.findAll());
+    }
 
     @PostMapping
-    public ResponseEntity<Reserva> crearReserva(@RequestBody ReservaDto dto) {
-        Reserva reserva = reservaService.crearReserva(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reserva);
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<Reserva> crearReserva(@RequestBody Reserva reserva) {
+        Reserva created = reservaService.save(reserva);
+        return ResponseEntity.status(201).body(created);
     }
 
-    @PostMapping("/{id}/cancelar")
-    public ResponseEntity<Void> cancelarReserva(@PathVariable Long id) {
-        reservaService.cancelarReserva(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Reserva> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(reservaService.findById(id).orElseThrow());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarReserva(@PathVariable Long id) {
+        reservaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    // Endpoints para obtener historial de reservas
 }
-

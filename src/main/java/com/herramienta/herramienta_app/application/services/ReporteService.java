@@ -1,30 +1,14 @@
 package com.herramienta.herramienta_app.application.services;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
-import com.herramienta.herramienta_app.infrastructure.repositories.PagoRepository;
-import com.herramienta.herramienta_app.infrastructure.repositories.ReservaRepository;
+import com.herramienta.herramienta_app.domain.dtos.Reporte;
 
-@Service
-public class ReporteService {
-     private ReservaRepository reservaRepository;
-    private PagoRepository pagoRepository;
-
-    public ReporteService(ReservaRepository reservaRepository, PagoRepository pagoRepository) {
-        this.reservaRepository = reservaRepository;
-        this.pagoRepository = pagoRepository;
-    }
-
-    public void generarReporteDeVentas() {
-      
-    }
-
-    public void generarReporteDeAlquileres() {
-        // Lógica para generar reporte de alquileres
-    }
-
-    public void generarEstadisticasDeUso() {
-        // Estadísticas de uso de herramientas y clientes frecuentes
-    }
-
+public interface ReporteService {
+    List<Reporte> findAll();
+    Optional<Reporte> findById(Long id);
+    Reporte save(Reporte reporte);
+    void deleteById(Long id);
+    boolean existsById(Long id);
 }
