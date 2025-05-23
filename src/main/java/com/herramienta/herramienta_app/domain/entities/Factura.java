@@ -2,6 +2,8 @@ package com.herramienta.herramienta_app.domain.entities;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +31,7 @@ public class Factura {
 
     @OneToOne
     @JoinColumn(name = "reserva_id")
+    @JsonBackReference
     private Reserva reserva;
 
     public Long getId() {

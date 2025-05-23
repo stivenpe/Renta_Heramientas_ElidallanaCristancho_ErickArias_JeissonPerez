@@ -2,6 +2,8 @@ package com.herramienta.herramienta_app.domain.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +21,8 @@ public class Categoria {
     private String nombre;
     private String descripcion;
 
-    @OneToMany(mappedBy = "categorias")
+    @OneToMany(mappedBy = "categoria")
+    @JsonManagedReference
     private List<Herramienta> herramientas;
 
     public Long getId() {

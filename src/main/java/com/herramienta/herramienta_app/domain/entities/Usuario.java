@@ -2,19 +2,13 @@ package com.herramienta.herramienta_app.domain.entities;
 
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuarios")
-@Inheritance(strategy = InheritanceType.JOINED) 
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +26,7 @@ public class Usuario {
     private Rol rol;
 
     @OneToMany(mappedBy = "usuario")
+    @JsonManagedReference
     private List<Notificacion> notificaciones;
 
     public Long getId() {
@@ -97,14 +92,13 @@ public class Usuario {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
-    
 
     public List<Notificacion> getNotificaciones() {
         return notificaciones;
     }
-    
+
     public void setNotificaciones(List<Notificacion> notificaciones) {
         this.notificaciones = notificaciones;
     }
-    
+
 }

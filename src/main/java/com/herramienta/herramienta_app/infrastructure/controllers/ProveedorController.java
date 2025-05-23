@@ -9,7 +9,7 @@ import com.herramienta.herramienta_app.domain.entities.Proveedor;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/consproveedores")
+@RequestMapping("/api/proveedores")
 @RequiredArgsConstructor
 public class ProveedorController {
 

@@ -5,16 +5,7 @@ INSERT INTO categorias (descripcion, nombre) VALUES
 ('Herramientas de medición', 'Medición');
 
 -- Insertar roles
-INSERT INTO roles (nombre) VALUES
-('ADMIN'),
-('PROVEEDOR'),
-('CLIENTE');
-
--- Insertar permisos
-INSERT INTO permisos (descripcion, nombre) VALUES
-('Acceso total al sistema', 'Admin Full'),
-('Acceso a gestión de herramientas', 'Gestión Herramientas'),
-('Acceso a reservas y pagos', 'Gestión Reservas');
+INSERT INTO roles (nombre) VALUES ('ADMIN'), ('PROVEEDOR'), ('CLIENTE');
 
 -- Insertar usuarios
 INSERT INTO usuarios (activo, rol_id, direccion, email, nombre, password, telefono) VALUES

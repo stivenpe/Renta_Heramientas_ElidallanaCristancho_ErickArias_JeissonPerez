@@ -2,6 +2,8 @@ package com.herramienta.herramienta_app.domain.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -16,9 +18,11 @@ public class Proveedor extends Usuario {
     private String nombreEmpresa;
 
     @OneToMany(mappedBy = "proveedor")
+    @JsonManagedReference
     private List<Herramienta> herramientas;
 
     @OneToMany(mappedBy = "proveedor")
+    @JsonManagedReference
     private List<Reserva> reservas;
 
     public String getRfc() {

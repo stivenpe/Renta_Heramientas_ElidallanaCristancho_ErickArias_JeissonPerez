@@ -2,6 +2,8 @@ package com.herramienta.herramienta_app.domain.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,10 +30,12 @@ public class Herramienta {
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    private Categoria categorias;
+    @JsonBackReference
+    private Categoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "proveedor_id")
+    @JsonBackReference
     private Proveedor proveedor;
 
     @OneToMany(mappedBy = "herramienta")
@@ -104,12 +108,12 @@ public class Herramienta {
         this.activa = activa;
     }
 
-    public Categoria getCategorias() {
-        return categorias;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCategorias(Categoria categorias) {
-        this.categorias = categorias;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public Proveedor getProveedor() {
