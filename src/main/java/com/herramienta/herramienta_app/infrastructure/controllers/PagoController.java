@@ -9,7 +9,7 @@ import com.herramienta.herramienta_app.domain.entities.Pago;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/pagos")
+@RequestMapping("/api/pagos")
 @RequiredArgsConstructor
 public class PagoController {
 
@@ -21,7 +21,6 @@ public class PagoController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<Pago> procesarPago(@RequestBody Pago pago) {
         Pago processed = pagoService.save(pago);
         return ResponseEntity.status(201).body(processed);
