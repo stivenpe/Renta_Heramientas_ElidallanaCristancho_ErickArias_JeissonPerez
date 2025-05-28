@@ -77,9 +77,11 @@ GET / - Listar todos los pagos
 
 ⚙️ Configuración
 🔧 Variables de Entorno
+````bash
 properties
 jwt.secret=TuClaveSecretaBase64 (mínimo 32 caracteres)
 jwt.expiration=86400000 # 24 horas en ms
+````
 🏁 Inicialización
 El sistema crea automáticamente los roles básicos al iniciar:
 
