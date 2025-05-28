@@ -1,5 +1,9 @@
+Repositorio Frontend: https://github.com/Elidallanacristanchocaceres/Proyecto_RentaHerramientas_JeissonPerez_ErickArias_ElidallanaCristancho 
+
 📚 README - Sistema de Gestión de Herramientas (Backend)
+
 🌟 Descripción General
+
 Este proyecto es un sistema backend para la gestión de herramientas, reservas, usuarios y facturas. Desarrollado con Spring Boot y Spring Security, ofrece autenticación JWT, roles de usuario y operaciones CRUD.
 
 🛠️ Tecnologías Principales
