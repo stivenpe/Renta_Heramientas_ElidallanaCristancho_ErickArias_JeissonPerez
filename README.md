@@ -9,7 +9,7 @@ Este proyecto es un sistema backend para la gestión de herramientas, reservas, 
 🛠️ Tecnologías Principales
 Java 17 🍵
 
-Spring Boot 3 🚀
+Spring Boot 🚀
 
 Spring Security 🔐
 
