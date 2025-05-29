@@ -11,8 +11,15 @@ public class HerramientaDto {
     private int cantidadDisponible;
     private String categoria;
     private String proveedor;
+    private Boolean activa;
     public Long getId() {
         return id;
+    }
+    public Boolean getActiva() {
+        return activa;
+    }
+    public void setActiva(Boolean activa) {
+        this.activa = activa;
     }
     public void setId(Long id) {
         this.id = id;

@@ -2,6 +2,8 @@ package com.herramienta.herramienta_app.domain.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -15,6 +17,7 @@ public class Cliente extends Usuario {
     private String razonSocial;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonManagedReference
     private List<Reserva> reservas;
 
     public String getRfc() {

@@ -3,6 +3,9 @@ package com.herramienta.herramienta_app.domain.entities;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,20 +30,25 @@ public class Reserva {
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
+    @JsonBackReference
     private Cliente cliente;
 
     @ManyToOne
     @JoinColumn(name = "proveedor_id")
+    @JsonBackReference
     private Proveedor proveedor;
 
     @ManyToOne
     @JoinColumn(name = "herramienta_id")
+    @JsonBackReference
     private Herramienta herramienta;
 
     @OneToOne(mappedBy = "reserva")
+    @JsonManagedReference
     private Pago pago;
 
     @OneToOne(mappedBy = "reserva")
+    @JsonManagedReference
     private Factura factura;
 
     public Long getId() {

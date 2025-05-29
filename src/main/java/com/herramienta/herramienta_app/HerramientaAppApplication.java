@@ -1,11 +1,16 @@
 package com.herramienta.herramienta_app;
 
+import java.util.Optional;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.herramienta.herramienta_app.application.services.UsuarioService;
 import com.herramienta.herramienta_app.domain.entities.Rol;
+import com.herramienta.herramienta_app.domain.entities.Usuario;
 import com.herramienta.herramienta_app.infrastructure.repositories.Rol.RolRepository;
 
 @SpringBootApplication
@@ -15,20 +20,29 @@ public class HerramientaAppApplication {
     }
 
     @Bean
-    CommandLineRunner init(RolRepository rolRepository) {
+    CommandLineRunner initAdminusuario(UsuarioService usuarioService, RolRepository rolRepository,
+            PasswordEncoder passwordEncoder) {
         return args -> {
-            if (rolRepository.count() == 0) {
-                Rol admin = new Rol();
-                admin.setNombre("ADMIN");
-                rolRepository.save(admin);
+            if (usuarioService.findOneByUsuarioname("admin").isEmpty()) {
+                Optional<Rol> adminRolOpt = rolRepository.findByNombre("ADMIN");
+                if (adminRolOpt.isPresent()) {
+                    Rol adminRol = adminRolOpt.get();
 
-                Rol proveedor = new Rol();
-                proveedor.setNombre("PROVEEDOR");
-                rolRepository.save(proveedor);
+                    Usuario adminusuario = new Usuario();
+                    adminusuario.setNombre("admin");
+                    adminusuario.setEmail("eli@gmail.com");
+                    adminusuario.setPassword(passwordEncoder.encode("123456789"));
+                    adminusuario.setDireccion("Dirección Administrativa");
+                    adminusuario.setTelefono("0000000000");
+                    adminusuario.setActivo(true);
+                    adminusuario.setRol(adminRol);
 
-                Rol cliente = new Rol();
-                cliente.setNombre("CLIENTE");
-                rolRepository.save(cliente);
+                    usuarioService.save(adminusuario);
+
+                    System.out.println("Usuario predeterminado creado con éxito.");
+                }
+            } else {
+                System.out.println("El usuario ya existe.");
             }
         };
     }

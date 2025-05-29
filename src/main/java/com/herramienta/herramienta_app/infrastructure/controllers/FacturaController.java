@@ -16,7 +16,6 @@ public class FacturaController {
     private final FacturaService facturaService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Factura>> listarTodasFacturas() {
         return ResponseEntity.ok(facturaService.findAll());
     }
@@ -27,7 +26,6 @@ public class FacturaController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Factura> crearFactura(@RequestBody Factura factura) {
         return ResponseEntity.status(201).body(facturaService.save(factura));
     }
@@ -38,7 +36,6 @@ public class FacturaController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminarFactura(@PathVariable Long id) {
         facturaService.deleteById(id);
         return ResponseEntity.noContent().build();
