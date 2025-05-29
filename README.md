@@ -85,11 +85,13 @@ jwt.expiration=86400000 # 24 horas en ms
 🏁 Inicialización
 El sistema crea automáticamente los roles básicos al iniciar:
 
-ADMIN 👑
+### ADMIN 👑(Admin Predeterminado):
+- eli@gmail.com
+- 123456789
 
-PROVEEDOR 🛠️
+### PROVEEDOR 🛠️
 
-CLIENTE 👤
+### CLIENTE 👤
 
 🧪 Testing
 Pruebas básicas de contexto incluidas
